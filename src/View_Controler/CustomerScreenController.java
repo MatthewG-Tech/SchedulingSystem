@@ -71,7 +71,13 @@ public class CustomerScreenController implements Initializable {
     }
 
     @FXML
-    private void createButtonAction(ActionEvent event) {
+    private void createButtonAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("AddCustomerScreen.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene ((Pane) loader.load()));
+        AddCustomerScreenController addCustoemrScreenController = loader.<AddCustomerScreenController>getController();
+        //appointmentScreenController.setUp(partToBeModifiedIndex,temp);
+        stage.show();
     }
     
 }
