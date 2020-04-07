@@ -6,12 +6,20 @@
 package View_Controler;
 
 import Model.User;
+import Utils.AddressDataInterface;
+import Utils.AppointmentDataInterface;
+import Utils.CentralData;
+import Utils.CityDataInterface;
+import Utils.CountryDataInterface;
+import Utils.CustomerDataInterface;
 import Utils.UserDataInterface;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,13 +62,18 @@ public class LogInScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        userNameLabel.setAlignment(Pos.CENTER_RIGHT);
-        passwordLabel.setAlignment(Pos.CENTER_RIGHT);
-        if(System.getProperty("user.language").equals("en")){
-            switchToEnglish();
-        }else if(System.getProperty("user.language").equals("es")){
-            switchToSpanish();
+        try {
+            CentralData.setCountries(CountryDataInterface.getAllCountries());
+            CentralData.setCities(CityDataInterface.getAllCities());
+            userNameLabel.setAlignment(Pos.CENTER_RIGHT);
+            passwordLabel.setAlignment(Pos.CENTER_RIGHT);
+            if(System.getProperty("user.language").equals("en")){
+                switchToEnglish();
+            }else if(System.getProperty("user.language").equals("es")){
+                switchToSpanish();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(LogInScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
 
@@ -68,7 +81,7 @@ public class LogInScreenController implements Initializable {
     private void logInButtonAction(ActionEvent event) throws IOException, Exception {
         System.out.println("Log In Button Pressed.");
         if(doUserNamePasswordMatch(userNameField.getText(), passwordField.getText())){
-            successfulLogIn(event);
+            successfulLogIn(event, userNameField.getText());
         }else{
             unsuccessfulLogIn();
         }
@@ -82,7 +95,11 @@ public class LogInScreenController implements Initializable {
         return false;
     }
     
-    private void successfulLogIn(ActionEvent event) throws IOException{
+    private void successfulLogIn(ActionEvent event, String userNameInput) throws IOException, Exception{
+        CentralData.setUser(UserDataInterface.getUser(userNameInput));
+        CentralData.setAddressess(AddressDataInterface.getAllAddresses());
+        CentralData.setCutomers(CustomerDataInterface.getAllCustomers());
+        CentralData.setUserAppointments(AppointmentDataInterface.getAllUserAppointments(CentralData.getUser().getUserId()));
         checkForAppointment();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -99,6 +116,7 @@ public class LogInScreenController implements Initializable {
     }
     
     private void checkForAppointment(){
+        
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Alert");
         alert.setHeaderText("Upcoming Appointment");

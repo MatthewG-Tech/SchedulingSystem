@@ -40,6 +40,7 @@ public class MenuController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        sortByWeekButton.setSelected(true);
     }    
 
     @FXML
@@ -79,9 +80,13 @@ public class MenuController implements Initializable {
 
     @FXML
     private void sortByWeekButtonAction(ActionEvent event) {
+        sortByWeekButton.setSelected(true);
+        sortByMonthButton.setSelected(false);
     }
 
     @FXML
     private void sortByMonthButtonAction(ActionEvent event) {
+        sortByWeekButton.setSelected(false);
+        sortByMonthButton.setSelected(true);
     }
 }

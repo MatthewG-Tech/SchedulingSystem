@@ -8,6 +8,8 @@ package Utils;
 import Model.Country;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -19,15 +21,15 @@ public class CountryDataInterface {
     * Returns Country or null if not found
     */
     public static Country getCountry(int countryIdInput) throws SQLException, Exception{
-        String sqlStatement="select * FROM user WHERE countryId  = '" + countryIdInput + "'";
+        String sqlStatement = "select * FROM country WHERE countryId  = '" + countryIdInput + "'";
         Query.makeQuery(sqlStatement);
-        Country userResult;
+        Country countryResult;
         ResultSet result = Query.getResult();
         while(result.next()){
              int countryId = result.getInt("countryId");
-             String countryName = result.getString("countryName");
-             userResult= new Country(countryId, countryName);
-             return userResult;
+             String countryName = result.getString("country");
+             countryResult= new Country(countryId, countryName);
+             return countryResult;
         }
         return null;
     }
@@ -36,16 +38,34 @@ public class CountryDataInterface {
     * Returns Country or null if not found
     */
     public static Country getCountry(String countryNameInput) throws SQLException, Exception{
-        String sqlStatement="select * FROM user WHERE countryName  = '" + countryNameInput + "'";
+        String sqlStatement = "select * FROM country WHERE countryName  = '" + countryNameInput + "'";
         Query.makeQuery(sqlStatement);
-        Country userResult;
+        Country countryResult;
         ResultSet result = Query.getResult();
         while(result.next()){
              int countryId = result.getInt("countryId");
-             String countryName = result.getString("countryName");
-             userResult= new Country(countryId, countryName);
-             return userResult;
+             String countryName = result.getString("country");
+             countryResult= new Country(countryId, countryName);
+             return countryResult;
         }
         return null;
+    }
+    /**
+    * Get All Customers
+    * Returns All Customers in observable list
+    */
+    public static ObservableList<Country> getAllCountries() throws SQLException, Exception{
+        ObservableList<Country> customerList = FXCollections.observableArrayList();
+        String sqlStatement = "select * FROM country";
+        Query.makeQuery(sqlStatement);
+        Country countryResult;
+        ResultSet result = Query.getResult();
+        while(result.next()){
+             int countryId = result.getInt("countryId");
+             String countryName = result.getString("country");
+             countryResult = new Country(countryId, countryName);
+             customerList.add(countryResult);
+        }
+        return customerList;
     }
 }

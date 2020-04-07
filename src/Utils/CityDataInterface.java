@@ -8,6 +8,8 @@ package Utils;
 import Model.City;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -19,16 +21,16 @@ public class CityDataInterface {
     * Returns City or null if not found
     */
     public static City getCity(int cityIdInput) throws SQLException, Exception{
-        String sqlStatement="select * FROM user WHERE cityId  = '" + cityIdInput + "'";
+        String sqlStatement="select * FROM city WHERE cityId  = " + cityIdInput + "";
         Query.makeQuery(sqlStatement);
-        City userResult;
+        City cityResult;
         ResultSet result = Query.getResult();
         while(result.next()){
              int cityId = result.getInt("cityId");
-             String cityName = result.getString("cityName");
+             String cityName = result.getString("city");
              int countryId = result.getInt("countryId");
-             userResult= new City(cityId, cityName, CountryDataInterface.getCountry(countryId));
-             return userResult;
+             cityResult= new City(cityId, cityName, CountryDataInterface.getCountry(countryId));
+             return cityResult;
         }
         return null;
     }
@@ -37,17 +39,36 @@ public class CityDataInterface {
     * Returns City or null if not found
     */
     public static City getCity(String cityNameInput) throws SQLException, Exception{
-        String sqlStatement="select * FROM user WHERE cityName  = '" + cityNameInput + "'";
+        String sqlStatement="select * FROM city WHERE city = '" + cityNameInput + "'";
         Query.makeQuery(sqlStatement);
-        City userResult;
+        City cityResult;
         ResultSet result = Query.getResult();
         while(result.next()){
              int cityId = result.getInt("cityId");
-             String cityName = result.getString("cityName");
+             String cityName = result.getString("city");
              int countryId = result.getInt("countryId");
-             userResult= new City(cityId, cityName, CountryDataInterface.getCountry(countryId));
-             return userResult;
+             cityResult= new City(cityId, cityName, CountryDataInterface.getCountry(countryId));
+             return cityResult;
         }
         return null;
+    }
+    /**
+    * Get All Customers
+    * Returns All Customers in observable list
+    */
+    public static ObservableList<City> getAllCities() throws SQLException, Exception{
+        ObservableList<City> customerList = FXCollections.observableArrayList();
+        String sqlStatement = "select * FROM city";
+        Query.makeQuery(sqlStatement);
+        City cityResult;
+        ResultSet result = Query.getResult();
+        while(result.next()){
+             int cityId = result.getInt("cityId");
+             String cityName = result.getString("city");
+             int countryId = result.getInt("countryId");
+             cityResult= new City(cityId, cityName, CountryDataInterface.getCountry(countryId));
+             customerList.add(cityResult);
+        }
+        return customerList;
     }
 }
