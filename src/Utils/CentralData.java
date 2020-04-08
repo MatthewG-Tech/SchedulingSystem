@@ -120,7 +120,7 @@ public class CentralData {
     * Get User Appointments
     * 
     */
-    public ObservableList<Appointment> getUserAppointments(){
+    public static ObservableList<Appointment> getUserAppointments(){
         return userAppointments;
     }
     /**

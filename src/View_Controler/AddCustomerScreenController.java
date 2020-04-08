@@ -88,7 +88,6 @@ public class AddCustomerScreenController implements Initializable {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene ((Pane) loader.load()));
             CustomerScreenController customerScreenController = loader.<CustomerScreenController>getController();
-            //appointmentScreenController.setUp(partToBeModifiedIndex,temp);
             stage.show();
         }
     }

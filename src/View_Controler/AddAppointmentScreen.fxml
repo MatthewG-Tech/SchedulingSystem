@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="448.0" prefWidth="301.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controler.AddAppointmentScreenController">
+   <children>
+      <AnchorPane layoutX="8.0" layoutY="7.0" prefHeight="434.0" prefWidth="286.0" style="-fx-border-color: black; -fx-border-radius: 10;">
+         <children>
+            <Button layoutX="215.0" layoutY="397.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
+            <Label layoutX="14.0" layoutY="14.0" text="Add Appointment">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Label>
+            <Label fx:id="appointmentIdLabel" layoutX="14.0" layoutY="76.0" text="Appointment ID" />
+            <Label layoutX="14.0" layoutY="145.0" text="Title" />
+            <Label layoutX="15.0" layoutY="182.0" text="Description" />
+            <Label layoutX="14.0" layoutY="220.0" text="Location" />
+            <Label layoutX="14.0" layoutY="257.0" text="Type" />
+            <Label layoutX="15.0" layoutY="294.0" text="URL" />
+            <Label layoutX="15.0" layoutY="365.0" text="End" />
+            <TextField fx:id="titleField" layoutX="112.0" layoutY="140.0" />
+            <TextField fx:id="descriptionField" layoutX="112.0" layoutY="177.0" />
+            <TextField fx:id="typeField" layoutX="111.0" layoutY="252.0" />
+            <SplitMenuButton fx:id="cityDropdown" layoutX="111.0" layoutY="215.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="161.0" text="SplitMenuButton" />
+            <TextField fx:id="urlField" layoutX="111.0" layoutY="289.0" />
+            <TextField fx:id="endField" layoutX="111.0" layoutY="360.0" />
+            <Button layoutX="138.0" layoutY="397.0" mnemonicParsing="false" onAction="#saveButtonAction" prefHeight="27.0" prefWidth="56.0" text="Save" />
+            <Label layoutX="15.0" layoutY="330.0" text="Start" />
+            <TextField fx:id="startField" layoutX="111.0" layoutY="325.0" />
+            <Label fx:id="customerLabel" layoutX="14.0" layoutY="109.0" text="Customer" />
+            <Button layoutX="220.0" layoutY="104.0" mnemonicParsing="false" onAction="#selectCustomerButtonAction" text="Select" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

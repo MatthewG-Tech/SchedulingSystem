@@ -51,11 +51,6 @@ public class CustomerScreenController implements Initializable {
         // TODO
         customerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         customerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        //customerAddress.setCellValueFactory(new PropertyValueFactory<>(""));
-        //customerAddress2.setCellValueFactory(new PropertyValueFactory<>("price"));
-        //customerCity.setItems(Inventory.getAllParts());
-        //customerPostalCode.setItems(Inventory.getAllParts());
-        //customerPhone.setItems(Inventory.getAllParts());
         customerTable.setItems(CentralData.getCustomers());
     }    
 
@@ -82,21 +77,22 @@ public class CustomerScreenController implements Initializable {
 
     @FXML
     private void deleteButtonAction(ActionEvent event) throws Exception {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText("Confirm Delete");
-        alert.setContentText("Are you sure you want to delete?");
+        Customer temp = customerTable.getSelectionModel().getSelectedItem();
+        if(temp != null){
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText("Confirm Delete");
+            alert.setContentText("Are you sure you want to delete?");
 
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
-            Customer temp = customerTable.getSelectionModel().getSelectedItem();
-            CustomerDataInterface.deleteCustomer(temp.getCustomerId());
-            AddressDataInterface.deleteAddress(temp.getAddress().getAddressId());
-            CentralData.removeCustomer(temp);
-            CentralData.removeAddress(temp.getAddress());
-            customerTable.setItems(CentralData.getCustomers());
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                CustomerDataInterface.deleteCustomer(temp.getCustomerId());
+                AddressDataInterface.deleteAddress(temp.getAddress().getAddressId());
+                CentralData.removeCustomer(temp);
+                CentralData.removeAddress(temp.getAddress());
+                customerTable.setItems(CentralData.getCustomers());
+            }
         }
-        
         System.out.println("Customer Delete");
     }
 
