@@ -35,7 +35,7 @@ import javafx.stage.Stage;
  *
  * @author matthewguerra
  */
-public class AddCustomerScreenController implements Initializable {
+public class ModifyCustomerScreenController implements Initializable {
 
     @FXML
     private Label customerIdLabel;
@@ -44,13 +44,15 @@ public class AddCustomerScreenController implements Initializable {
     @FXML
     private TextField addressField;
     @FXML
-    private SplitMenuButton cityDropdown;
-    @FXML
     private TextField address2Field;
+    @FXML
+    private SplitMenuButton cityDropdown;
     @FXML
     private TextField postalCodeField;
     @FXML
     private TextField phoneField;
+    
+    private Customer selectedCustomer;
     
     private int selectedCityId;
 
@@ -59,8 +61,7 @@ public class AddCustomerScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        customerIdLabel.setText("Customer ID: " + (CentralData.getCustomers().size() + 1));
-        cityDropdown.setText("Pick A City");
+        
         for(int i = 1; i <= CentralData.getCities().size(); i++){
             City temp = CentralData.getCity(i);
 
@@ -72,7 +73,7 @@ public class AddCustomerScreenController implements Initializable {
                 cityDropdown.setText(temp.getCityName());
             });
         }
-    }    
+    }
 
     @FXML
     private void cancelButtonAction(ActionEvent event) throws IOException {
@@ -82,7 +83,7 @@ public class AddCustomerScreenController implements Initializable {
         alert.setContentText("Are you sure you want to cancel?");
 
         Optional<ButtonType> result = alert.showAndWait();
-        System.out.println("Add Customer Exit");
+        System.out.println("Modify Customer Exit");
         if (result.get() == ButtonType.OK){  
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerScreen.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -95,12 +96,16 @@ public class AddCustomerScreenController implements Initializable {
 
     @FXML
     private void saveButtonAction(ActionEvent event) throws Exception {
-        Address tempAddress = new Address((CentralData.getAddresses().size() + 1) , addressField.getText(), address2Field.getText(), CentralData.getCity(selectedCityId), postalCodeField.getText(), phoneField.getText());
-        Customer tempCustomer = new Customer((CentralData.getCustomers().size() + 1), customerNameField.getText(), tempAddress, true);
-        AddressDataInterface.addAddress(tempAddress);
-        CustomerDataInterface.addCustomer(tempCustomer);
-        CentralData.addAddress(tempAddress);
-        CentralData.addCustomer(tempCustomer);
+        Address tempAddress = selectedCustomer.getAddress();
+        tempAddress.setAddress(addressField.getText());
+        tempAddress.setAddress2(address2Field.getText());
+        tempAddress.setPostalCode(postalCodeField.getText());
+        tempAddress.setPhone(phoneField.getText());
+        selectedCustomer.setCustomerName(customerNameField.getText());
+        selectedCustomer.setAddress(tempAddress);
+
+        AddressDataInterface.updateAddress(tempAddress);
+        CustomerDataInterface.updateCustomer(selectedCustomer);
         
         FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerScreen.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -109,6 +114,18 @@ public class AddCustomerScreenController implements Initializable {
         stage.show();
         
         System.out.println("Customer Saved");
+    }
+    
+    public void setUp(Customer customer){
+        selectedCustomer = customer;
+        customerIdLabel.setText("Customer ID: " + selectedCustomer.getCustomerId());
+        customerNameField.setText(selectedCustomer.getCustomerName());
+        addressField.setText(selectedCustomer.getAddress().getAddress());
+        address2Field.setText(selectedCustomer.getAddress().getAddress2());
+        postalCodeField.setText(selectedCustomer.getAddress().getPostalCode());
+        phoneField.setText(selectedCustomer.getAddress().getPhone());
+        cityDropdown.setText(selectedCustomer.getAddress().getCity().getCityName());
+        System.out.println(selectedCustomer);
     }
     
 }

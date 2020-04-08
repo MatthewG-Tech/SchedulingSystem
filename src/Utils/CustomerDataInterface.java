@@ -108,31 +108,15 @@ public class CustomerDataInterface {
         Query.makeQuery(sqlStatement);
     }
     /**
-    * Update Customer Name
-    * Input Customer Id, New Customer Name
+    * Update Customer 
+    * Input Customer
     */
-    public static void updateCustomerName(int customerId, String newCustomerName) throws SQLException, Exception{
-        String sqlStatement = "UPDATE customer\nSET customerName = '" + newCustomerName + "\nWHERE customerId = " + customerId + ";";
-        Query.makeQuery(sqlStatement);
-    }
-    /**
-    * Update Customer Address
-    * Input Customer Id, New Address Id
-    */
-    public static void updateCustomerAddress(int customerId, int newAddressId) throws SQLException, Exception{
-        String sqlStatement = "UPDATE customer\nSET addressId = " + newAddressId + "\nWHERE customerId = " + customerId + ";";
-        Query.makeQuery(sqlStatement);
-    }
-    /**
-    * Update Customer Address
-    * Input Customer Id, New Address Id
-    */
-    public static void updateCustomerActive(int customerId, Boolean newActive) throws SQLException, Exception{
-        int activeInt = 0;
-        if(newActive){
-            activeInt = 1;
-        }
-        String sqlStatement = "UPDATE customer\nSET active = " + activeInt + "\nWHERE customerId = " + customerId + ";";
+    public static void updateCustomer(Customer customerInput) throws SQLException, Exception{
+        String customerName = customerInput.getCustomerName();
+        int addressId = customerInput.getAddress().getAddressId();
+        Date temp = new Date();
+        String time = Time.converToDateTimeFormat(temp);
+        String sqlStatement = "UPDATE customer\nSET customerName = '" + customerName + "', addressId = '" + addressId + "', lastUpdate = '" + time + "', lastUpdateBy = '" + CentralData.getUser().getUserName() + "'\nWHERE customerId = " + customerInput.getCustomerId() + ";";
         Query.makeQuery(sqlStatement);
     }
     /**

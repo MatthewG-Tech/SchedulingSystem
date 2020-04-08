@@ -69,7 +69,15 @@ public class CustomerScreenController implements Initializable {
     }
 
     @FXML
-    private void modifyButtonAction(ActionEvent event) {
+    private void modifyButtonAction(ActionEvent event) throws IOException {
+        if(customerTable.getSelectionModel().getSelectedItem() != null){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ModifyCustomerScreen.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene ((Pane) loader.load()));
+            ModifyCustomerScreenController modifyCustomerScreenController = loader.<ModifyCustomerScreenController>getController();
+            modifyCustomerScreenController.setUp(customerTable.getSelectionModel().getSelectedItem());
+            stage.show();
+        }
     }
 
     @FXML
@@ -97,8 +105,7 @@ public class CustomerScreenController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("AddCustomerScreen.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene ((Pane) loader.load()));
-        AddCustomerScreenController addCustoemrScreenController = loader.<AddCustomerScreenController>getController();
-        //appointmentScreenController.setUp(partToBeModifiedIndex,temp);
+        AddCustomerScreenController addCustomerScreenController = loader.<AddCustomerScreenController>getController();
         stage.show();
     }
     
