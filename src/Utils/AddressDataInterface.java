@@ -8,6 +8,7 @@ package Utils;
 import Model.Address;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -82,5 +83,29 @@ public class AddressDataInterface {
             addressList.add(addressResult);
         }
         return addressList;
+    }
+    /**
+    * Add Customer
+    * Input Customer Id, Customer Name, Address Id, Active Boolean
+    */
+    public static void addAddress(Address addressInput) throws SQLException, Exception{
+        int addressId = addressInput.getAddressId();
+        String address = addressInput.getAddress();
+        String address2 = addressInput.getAddress2();
+        int cityid = addressInput.getCity().getCityId();
+        String postalCode = addressInput.getPostalCode();
+        String phone = addressInput.getPhone();
+        Date temp = new Date();
+        String time = Time.converToDateTimeFormat(temp);
+        String sqlStatement = "INSERT INTO address (addressId, address, address2, cityid, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy)\nVALUES (" + addressId + ", '" + address +  "', '" + address2 + "', " + cityid + ", '" + postalCode +  "', '" + phone +  "', '" + time + "', '" + CentralData.getUser().getUserName() + "', '" + time + "', '" + CentralData.getUser().getUserName() + "');";
+        Query.makeQuery(sqlStatement);
+    }
+    /**
+    * Delete Address
+    * Input Address Id
+    */
+    public static void deleteAddress(int addressId) throws SQLException, Exception{
+        String sqlStatement = "DELETE FROM address WHERE addressId = " + addressId + ";";
+        Query.makeQuery(sqlStatement);
     }
 }

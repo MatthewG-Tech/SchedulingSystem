@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -27,15 +26,10 @@
             <Label layoutX="16.0" layoutY="291.0" text="Phone" />
             <TextField fx:id="customerNameField" layoutX="112.0" layoutY="106.0" />
             <TextField fx:id="addressField" layoutX="112.0" layoutY="143.0" />
-            <TextField fx:id="address2Label" layoutX="112.0" layoutY="178.0" />
-            <SplitMenuButton fx:id="cityDropdown" layoutX="112.0" layoutY="215.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="161.0" text="SplitMenuButton">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
-              </items>
-            </SplitMenuButton>
-            <TextField fx:id="postalCodeLabel" layoutX="112.0" layoutY="252.0" />
-            <TextField fx:id="phoneLabel" layoutX="112.0" layoutY="286.0" />
+            <TextField fx:id="address2Field" layoutX="112.0" layoutY="178.0" />
+            <SplitMenuButton fx:id="cityDropdown" layoutX="112.0" layoutY="215.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="161.0" text="SplitMenuButton" />
+            <TextField fx:id="postalCodeField" layoutX="112.0" layoutY="252.0" />
+            <TextField fx:id="phoneField" layoutX="112.0" layoutY="286.0" />
             <Button layoutX="139.0" layoutY="323.0" mnemonicParsing="false" onAction="#saveButtonAction" prefHeight="27.0" prefWidth="56.0" text="Save" />
          </children>
       </AnchorPane>

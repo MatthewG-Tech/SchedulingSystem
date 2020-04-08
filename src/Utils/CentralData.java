@@ -68,6 +68,48 @@ public class CentralData {
         countries = countriesInput;
     }
     /**
+    * Add User Appointment
+    * 
+    */
+    public static void addUserAppointment(Appointment appointmentInput){
+        userAppointments.add(appointmentInput);
+    }
+    /**
+    * Add Customer
+    * 
+    */
+    public static void addCustomer(Customer customerInput){
+        customers.add(customerInput);
+    }
+    /**
+    * Add Address
+    * 
+    */
+    public static void addAddress(Address addressInput){
+        addresses.add(addressInput);
+    }
+    /**
+    * Remove User Appointment
+    * 
+    */
+    public static void removeUserAppointment(Appointment appointmentIndex){
+        userAppointments.remove(appointmentIndex);
+    }
+    /**
+    * Remove Customer
+    * 
+    */
+    public static void removeCustomer(Customer customerIndex){
+        customers.remove(customerIndex);
+    }
+    /**
+    * Remove Address
+    * 
+    */
+    public static void removeAddress(Address addressIndex){
+        addresses.remove(addressIndex);
+    }
+    /**
     * Get User
     * 
     */

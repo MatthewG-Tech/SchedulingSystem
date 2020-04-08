@@ -6,8 +6,11 @@
 package Utils;
 
 import Model.Customer;
+import Utils.Time;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -90,8 +93,18 @@ public class CustomerDataInterface {
     * Add Customer
     * Input Customer Id, Customer Name, Address Id, Active Boolean
     */
-    public static void addCustomer(int customerId, String customerName, int addressId, Boolean active) throws SQLException, Exception{
-        String sqlStatement = "INSERT INTO customer (customerId, customerName, addressId, active)\nVALUES (" + customerId + ", '" + customerName +  "'," + addressId +  "," + active + ");";
+    public static void addCustomer(Customer customer) throws SQLException, Exception{
+        int customerId = customer.getCustomerId();
+        String customerName = customer.getCustomerName();
+        int addressId = customer.getAddress().getAddressId();
+        Boolean active = customer.getActive();
+        int activeInt = 0;
+        if(active){
+            activeInt = 1;
+        }
+        Date temp = new Date();
+        String time = Time.converToDateTimeFormat(temp);
+        String sqlStatement = "INSERT INTO customer (customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy)\nVALUES (" + customerId + ", '" + customerName +  "', " + addressId +  ", " + activeInt + ", '" + time + "', '" + CentralData.getUser().getUserName() + "', '" + time + "', '" + CentralData.getUser().getUserName() + "');";
         Query.makeQuery(sqlStatement);
     }
     /**
@@ -114,8 +127,12 @@ public class CustomerDataInterface {
     * Update Customer Address
     * Input Customer Id, New Address Id
     */
-    public static void updateCustomerActive(int customerId, int newActive) throws SQLException, Exception{
-        String sqlStatement = "UPDATE customer\nSET active = " + newActive + "\nWHERE customerId = " + customerId + ";";
+    public static void updateCustomerActive(int customerId, Boolean newActive) throws SQLException, Exception{
+        int activeInt = 0;
+        if(newActive){
+            activeInt = 1;
+        }
+        String sqlStatement = "UPDATE customer\nSET active = " + activeInt + "\nWHERE customerId = " + customerId + ";";
         Query.makeQuery(sqlStatement);
     }
     /**

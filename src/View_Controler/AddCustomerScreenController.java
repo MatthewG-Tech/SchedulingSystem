@@ -5,7 +5,12 @@
  */
 package View_Controler;
 
+import Model.Address;
+import Model.City;
+import Model.Customer;
+import Utils.AddressDataInterface;
 import Utils.CentralData;
+import Utils.CustomerDataInterface;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -19,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -38,13 +44,15 @@ public class AddCustomerScreenController implements Initializable {
     @FXML
     private TextField addressField;
     @FXML
-    private TextField address2Label;
-    @FXML
     private SplitMenuButton cityDropdown;
     @FXML
-    private TextField postalCodeLabel;
+    private TextField address2Field;
     @FXML
-    private TextField phoneLabel;
+    private TextField postalCodeField;
+    @FXML
+    private TextField phoneField;
+    
+    private int selectedCityId;
 
     /**
      * Initializes the controller class.
@@ -52,6 +60,18 @@ public class AddCustomerScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         customerIdLabel.setText("Customer ID: " + (CentralData.getCustomers().size() + 1));
+        cityDropdown.setText("Pick A City");
+        for(int i = 1; i <= CentralData.getCities().size(); i++){
+            City temp = CentralData.getCity(i);
+
+            MenuItem choice = new MenuItem(temp.getCityName());
+            cityDropdown.getItems().add(choice);
+            //Lambda Function Is used because the number of cities could change in the future and this will not requrie reprograming if more cities are added.
+            choice.setOnAction((e)-> {
+                selectedCityId = temp.getCityId();
+                cityDropdown.setText(temp.getCityName());
+            });
+        }
     }    
 
     @FXML
@@ -74,7 +94,21 @@ public class AddCustomerScreenController implements Initializable {
     }
 
     @FXML
-    private void saveButtonAction(ActionEvent event) {
+    private void saveButtonAction(ActionEvent event) throws Exception {
+        Address tempAddress = new Address((CentralData.getAddresses().size() + 1) , addressField.getText(), address2Field.getText(), CentralData.getCity(selectedCityId), postalCodeField.getText(), phoneField.getText());
+        Customer tempCustomer = new Customer((CentralData.getCustomers().size() + 1), customerNameField.getText(), tempAddress, true);
+        AddressDataInterface.addAddress(tempAddress);
+        CustomerDataInterface.addCustomer(tempCustomer);
+        CentralData.addAddress(tempAddress);
+        CentralData.addCustomer(tempCustomer);
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerScreen.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene ((Pane) loader.load()));
+        CustomerScreenController customerScreenController = loader.<CustomerScreenController>getController();
+        stage.show();
+        
+        System.out.println(tempCustomer);
     }
     
 }
