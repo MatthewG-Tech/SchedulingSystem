@@ -6,9 +6,12 @@
 package View_Controler;
 
 import Model.Appointment;
+import Model.City;
+import Utils.AppointmentDataInterface;
 import Utils.CentralData;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -20,8 +23,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -31,30 +36,33 @@ import javafx.stage.Stage;
  * @author matthewguerra
  */
 public class AppointmentScreenController implements Initializable {
-
-    @FXML
-    private TableColumn<?, ?> customerId;
-    @FXML
-    private TableColumn<?, ?> customerName;
-    @FXML
-    private TableColumn<?, ?> customerAddress;
-    @FXML
-    private TableColumn<?, ?> customerAddress2;
-    @FXML
-    private TableColumn<?, ?> customerCity;
-    @FXML
-    private TableColumn<?, ?> customerPostalCode;
-    @FXML
-    private TableColumn<?, ?> customerPhone;
     @FXML
     private TableView<Appointment> appointmentTable;
+    @FXML
+    private TableColumn<Appointment, Integer> appointmentId;
+    @FXML
+    private TableColumn<Appointment, String> appointmentTitle;
+    @FXML
+    private TableColumn<Appointment, String> appointmentLocation;
+    @FXML
+    private TableColumn<Appointment, String> appointmentContact;
+    @FXML
+    private TableColumn<Appointment, String> appointmentType;
+    @FXML
+    private TableColumn<Appointment, Date> appointmentTime;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        appointmentId.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
+        appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
+        appointmentContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        appointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        appointmentTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        appointmentTable.setItems(CentralData.getAppointments());
     }    
 
     @FXML
@@ -81,7 +89,7 @@ public class AppointmentScreenController implements Initializable {
     }
 
     @FXML
-    private void deleteButtonAction(ActionEvent event) {
+    private void deleteButtonAction(ActionEvent event) throws Exception {
         Appointment temp = appointmentTable.getSelectionModel().getSelectedItem();
         if(temp != null){
             Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -91,8 +99,10 @@ public class AppointmentScreenController implements Initializable {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
-                CentralData.removeUserAppointment(temp);
+                CentralData.removeAppointment(temp);
                 appointmentTable.setItems(CentralData.getUserAppointments());
+                AppointmentDataInterface.deleteAppointment(temp.getAppointmentId());
+                appointmentTable.setItems(CentralData.getAppointments());
             }
         }
         System.out.println("Appointment Delete");

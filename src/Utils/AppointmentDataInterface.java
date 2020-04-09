@@ -22,7 +22,7 @@ public class AppointmentDataInterface {
     * Returns Appointment or null if not found
     */
     public static Appointment getAppointment(int appointmentIdInput) throws SQLException, Exception{
-        String sqlStatement="select * FROM appointment WHERE appointmentId  = " + appointmentIdInput + "";
+        String sqlStatement="select * FROM appointment WHERE appointmentId = " + appointmentIdInput + "";
         Query.makeQuery(sqlStatement);
         Appointment userResult;
         ResultSet result = Query.getResult();
@@ -36,8 +36,8 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            Date startTime = result.getDate("startTime");
-            Date endTime = result.getDate("endTime");
+            Date startTime = Time.convertToDate(result.getString("start"));
+            Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             return userResult;
         }
@@ -62,8 +62,8 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            Date startTime = result.getDate("startTime");
-            Date endTime = result.getDate("endTime");
+            Date startTime = Time.convertToDate(result.getString("start"));
+            Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             return userResult;
         }
@@ -89,8 +89,8 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            Date startTime = result.getDate("startTime");
-            Date endTime = result.getDate("endTime");
+            Date startTime = Time.convertToDate(result.getString("start"));
+            Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             customerList.add(userResult);
         }
@@ -116,11 +116,60 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            Date startTime = result.getDate("startTime");
-            Date endTime = result.getDate("endTime");
+            Date startTime = Time.convertToDate(result.getString("start"));
+            Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             customerList.add(userResult);
         }
         return customerList;
+    }
+    /**
+    * Add Appointment
+    * Input Appointment
+    */
+    public static void addAppointment(Appointment appointmentInput) throws SQLException, Exception{
+        int appointmentId = appointmentInput.getAppointmentId();
+        int customerId = appointmentInput.getCustomer().getCustomerId();
+        int userId = appointmentInput.getUser().getUserId();
+        String title = appointmentInput.getTitle();
+        String description = appointmentInput.getDescritpion();
+        String location = appointmentInput.getLocation();
+        String contact = appointmentInput.getContact();
+        String type = appointmentInput.getType();
+        String url = appointmentInput.getUrl();
+        String start = Time.converToDateTimeFormat(appointmentInput.getStartTime());
+        String end = Time.converToDateTimeFormat(appointmentInput.getEndTime());
+        Date temp = new Date();
+        String time = Time.converToDateTimeFormat(temp);
+        String sqlStatement = "INSERT INTO appointment (appointmentId, customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy)\nVALUES (" + appointmentId + ", " + customerId + ", " + userId + ", '" + title + "', '" + description +  "', '" + location +  "', '" + contact +  "', '" + type +  "', '" + url +  "', '" + start +  "', '" + end + "', '" + time + "', '" + CentralData.getUser().getUserName() + "', '" + time + "', '" + CentralData.getUser().getUserName() + "');";
+        Query.makeQuery(sqlStatement);
+    }
+    /**
+    * Update Appointment 
+    * Input Appointment
+    */
+    public static void updateAppointment(Appointment appointmentInput) throws SQLException, Exception{
+        int appointmentId = appointmentInput.getAppointmentId();
+        int customerId = appointmentInput.getCustomer().getCustomerId();
+        int userId = appointmentInput.getUser().getUserId();
+        String title = appointmentInput.getTitle();
+        String description = appointmentInput.getDescritpion();
+        String contact = appointmentInput.getContact();
+        String type = appointmentInput.getType();
+        String url = appointmentInput.getUrl();
+        String start = Time.converToDateTimeFormat(appointmentInput.getStartTime());
+        String end = Time.converToDateTimeFormat(appointmentInput.getEndTime());
+        Date temp = new Date();
+        String time = Time.converToDateTimeFormat(temp);
+        String sqlStatement = "UPDATE appointment\nSET appointmentId = " + appointmentId + ", customerId = " + customerId + ", userId = " + userId + ", title = '" + title + "', description = '" + description +  "', contact = '" + contact +  "', type = '" + type +  "', url = '" + url +  "', start = '" + start +  "', end = '" + end + "', lastUpdate = '" + time + "', lastUpdateBy = '" + CentralData.getUser().getUserName() + "'\nWHERE appointmentId = " + appointmentId + ";";
+        Query.makeQuery(sqlStatement);
+    }
+    /**
+    * Delete Appointment
+    * Input Appointment Id
+    */
+    public static void deleteAppointment(int appointmentId) throws SQLException, Exception{
+        String sqlStatement = "DELETE FROM appointment WHERE appointmentId = " + appointmentId + ";";
+        Query.makeQuery(sqlStatement);
     }
 }

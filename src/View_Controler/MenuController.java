@@ -5,10 +5,16 @@
  */
 package View_Controler;
 
+import Model.Appointment;
+import Utils.AppointmentDataInterface;
+import Utils.CentralData;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +25,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -33,14 +42,39 @@ public class MenuController implements Initializable {
     private RadioButton sortByWeekButton;
     @FXML
     private RadioButton sortByMonthButton;
+    @FXML
+    private TableView<Appointment> appointmentTable;
+    @FXML
+    private TableColumn<Appointment, Integer> appointmentId;
+    @FXML
+    private TableColumn<Appointment, String> appointmentTitle;
+    @FXML
+    private TableColumn<Appointment, String> appointmentLocation;
+    @FXML
+    private TableColumn<Appointment, String> appointmentContact;
+    @FXML
+    private TableColumn<Appointment, String> appointmentType;
+    @FXML
+    private TableColumn<Appointment, Date> appointmentTime;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        try {
+            CentralData.setUserAppointments(AppointmentDataInterface.getAllUserAppointments(CentralData.getUser().getUserId()));
+        } catch (Exception ex) {
+            Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         sortByWeekButton.setSelected(true);
+        appointmentId.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
+        appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
+        appointmentContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        appointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        appointmentTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        appointmentTable.setItems(CentralData.getUserAppointments());
     }    
 
     @FXML

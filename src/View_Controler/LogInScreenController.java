@@ -5,6 +5,7 @@
  */
 package View_Controler;
 
+import Model.Appointment;
 import Model.User;
 import Utils.AddressDataInterface;
 import Utils.AppointmentDataInterface;
@@ -12,14 +13,18 @@ import Utils.CentralData;
 import Utils.CityDataInterface;
 import Utils.CountryDataInterface;
 import Utils.CustomerDataInterface;
+import Utils.Time;
 import Utils.UserDataInterface;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -99,6 +104,7 @@ public class LogInScreenController implements Initializable {
         CentralData.setUser(UserDataInterface.getUser(userNameInput));
         CentralData.setAddressess(AddressDataInterface.getAllAddresses());
         CentralData.setCutomers(CustomerDataInterface.getAllCustomers());
+        CentralData.setAppointments(AppointmentDataInterface.getAllAppointments());
         CentralData.setUserAppointments(AppointmentDataInterface.getAllUserAppointments(CentralData.getUser().getUserId()));
         checkForAppointment();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
@@ -116,12 +122,19 @@ public class LogInScreenController implements Initializable {
     }
     
     private void checkForAppointment(){
-        
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Alert");
-        alert.setHeaderText("Upcoming Appointment");
-        alert.setContentText("");
-        Optional<ButtonType> result = alert.showAndWait();
+        ObservableList<Appointment> appointments = CentralData.getUserAppointments();
+        for(int i = 0; i < appointments.size(); i++){
+            Date fifteenMinutes = new Date();
+            Time.addFifteenMinutes(fifteenMinutes);
+            Appointment appointment = appointments.get(i);
+            if(appointment.getStartTime().before(fifteenMinutes) && appointment.getStartTime().after(new Date())){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Alert");
+                alert.setHeaderText("Upcoming Appointment");
+                alert.setContentText("You have an appointment with " + appointment.getCustomer().getCustomerName() + ", in the next 15 minutes.");
+                Optional<ButtonType> result = alert.showAndWait();
+            }
+        }
     }
     
     private void switchToEnglish(){

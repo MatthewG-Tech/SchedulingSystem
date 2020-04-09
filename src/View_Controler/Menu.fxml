@@ -8,26 +8,30 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="492.0" prefWidth="738.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controler.MenuController">
+<AnchorPane id="AnchorPane" prefHeight="496.0" prefWidth="704.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controler.MenuController">
    <children>
-      <AnchorPane layoutX="17.0" layoutY="16.0" prefHeight="460.0" prefWidth="705.0" style="-fx-border-color: black; -fx-border-radius: 10;">
+      <AnchorPane layoutX="15.0" layoutY="14.0" prefHeight="468.0" prefWidth="674.0" style="-fx-border-color: black; -fx-border-radius: 10;">
          <children>
-            <Label layoutX="14.0" layoutY="14.0" text="Main Menu">
+            <Label layoutX="14.0" layoutY="14.0" text="Your Appointments">
                <font>
                   <Font size="30.0" />
                </font>
             </Label>
-            <Button layoutX="634.0" layoutY="419.0" mnemonicParsing="false" onAction="#exitButtonAction" prefHeight="27.0" prefWidth="57.0" text="Exit" />
-            <Button layoutX="244.0" layoutY="419.0" mnemonicParsing="false" onAction="#userButtonAction" prefHeight="27.0" prefWidth="95.0" text="Customer" />
-            <Button layoutX="366.0" layoutY="419.0" mnemonicParsing="false" onAction="#appointmentsButtonAction" text="Appointments" />
-            <TableView layoutX="54.0" layoutY="76.0" prefHeight="240.0" prefWidth="611.0">
-              <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
-              </columns>
+            <Button layoutX="584.0" layoutY="429.0" mnemonicParsing="false" onAction="#exitButtonAction" prefHeight="27.0" prefWidth="57.0" text="Exit" />
+            <Button layoutX="229.0" layoutY="429.0" mnemonicParsing="false" onAction="#userButtonAction" prefHeight="27.0" prefWidth="95.0" text="Customer" />
+            <Button layoutX="351.0" layoutY="429.0" mnemonicParsing="false" onAction="#appointmentsButtonAction" text="Appointments" />
+            <RadioButton fx:id="sortByWeekButton" layoutX="58.0" layoutY="408.0" mnemonicParsing="false" onAction="#sortByWeekButtonAction" text="Sort By Week" />
+            <RadioButton fx:id="sortByMonthButton" layoutX="58.0" layoutY="433.0" mnemonicParsing="false" onAction="#sortByMonthButtonAction" text="Sort By Month" />
+            <TableView fx:id="appointmentTable" layoutX="15.0" layoutY="68.0" prefHeight="333.0" prefWidth="646.0">
+               <columns>
+                  <TableColumn fx:id="appointmentId" prefWidth="26.0" text="Id" />
+                  <TableColumn fx:id="appointmentTitle" prefWidth="134.0" text="Title" />
+                  <TableColumn fx:id="appointmentLocation" prefWidth="132.0" text="Location" />
+                  <TableColumn fx:id="appointmentContact" prefWidth="104.0" text="Contact" />
+                  <TableColumn fx:id="appointmentType" prefWidth="88.0" text="Type" />
+                  <TableColumn fx:id="appointmentTime" prefWidth="161.0" text="Time" />
+               </columns>
             </TableView>
-            <RadioButton fx:id="sortByWeekButton" layoutX="54.0" layoutY="325.0" mnemonicParsing="false" onAction="#sortByWeekButtonAction" text="Sort By Week" />
-            <RadioButton fx:id="sortByMonthButton" layoutX="54.0" layoutY="350.0" mnemonicParsing="false" onAction="#sortByMonthButtonAction" text="Sort By Month" />
          </children>
       </AnchorPane>
    </children>

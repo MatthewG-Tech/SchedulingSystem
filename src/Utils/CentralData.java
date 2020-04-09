@@ -20,6 +20,7 @@ import javafx.collections.ObservableList;
 public class CentralData {
     private static User user;
     private static ObservableList<Appointment> userAppointments;
+    private static ObservableList<Appointment> appointments;
     private static ObservableList<Customer> customers;
     private static ObservableList<Address> addresses;
     private static ObservableList<City> cities;
@@ -38,6 +39,13 @@ public class CentralData {
     */
     public static void setUserAppointments(ObservableList<Appointment> userAppointmentsInput){
         userAppointments = userAppointmentsInput;
+    }
+    /**
+    * Set Appointments
+    * 
+    */
+    public static void setAppointments(ObservableList<Appointment> appointmentsInput){
+        appointments = appointmentsInput;
     }
     /**
     * Set Customers
@@ -75,6 +83,13 @@ public class CentralData {
         userAppointments.add(appointmentInput);
     }
     /**
+    * Add Appointment
+    * 
+    */
+    public static void addAppointment(Appointment appointmentInput){
+        appointments.add(appointmentInput);
+    }
+    /**
     * Add Customer
     * 
     */
@@ -92,8 +107,15 @@ public class CentralData {
     * Remove User Appointment
     * 
     */
-    public static void removeUserAppointment(Appointment appointmentIndex){
-        userAppointments.remove(appointmentIndex);
+    public static void removeUserAppointment(Appointment appointment){
+        userAppointments.remove(appointment);
+    }
+    /**
+    * Remove Appointment
+    * 
+    */
+    public static void removeAppointment(Appointment appointment){
+        appointments.remove(appointment);
     }
     /**
     * Remove Customer
@@ -122,6 +144,13 @@ public class CentralData {
     */
     public static ObservableList<Appointment> getUserAppointments(){
         return userAppointments;
+    }
+    /**
+    * Get User Appointments
+    * 
+    */
+    public static ObservableList<Appointment> getAppointments(){
+        return appointments;
     }
     /**
     * Get Customers

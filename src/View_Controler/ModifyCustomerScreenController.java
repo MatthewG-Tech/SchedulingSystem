@@ -99,6 +99,7 @@ public class ModifyCustomerScreenController implements Initializable {
         Address tempAddress = selectedCustomer.getAddress();
         tempAddress.setAddress(addressField.getText());
         tempAddress.setAddress2(address2Field.getText());
+        tempAddress.setCity(CentralData.getCity(selectedCityId));
         tempAddress.setPostalCode(postalCodeField.getText());
         tempAddress.setPhone(phoneField.getText());
         selectedCustomer.setCustomerName(customerNameField.getText());
