@@ -119,6 +119,7 @@ public class ModifyCustomerScreenController implements Initializable {
     
     public void setUp(Customer customer){
         selectedCustomer = customer;
+        selectedCityId = customer.getAddress().getCity().getCityId();
         customerIdLabel.setText("Customer ID: " + selectedCustomer.getCustomerId());
         customerNameField.setText(selectedCustomer.getCustomerName());
         addressField.setText(selectedCustomer.getAddress().getAddress());

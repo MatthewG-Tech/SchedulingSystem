@@ -14,6 +14,7 @@ import Utils.CityDataInterface;
 import Utils.CountryDataInterface;
 import Utils.CustomerDataInterface;
 import Utils.Time;
+import static Utils.Time.getTimeZone;
 import Utils.UserDataInterface;
 import java.io.IOException;
 import java.net.URL;
@@ -21,6 +22,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
@@ -128,8 +131,8 @@ public class LogInScreenController implements Initializable {
         ObservableList<Appointment> appointments = CentralData.getUserAppointments();
         LocalDate localDate = LocalDate.now();
         LocalTime localTime = LocalTime.now();
-        LocalDateTime currentDateTime = LocalDateTime.of(localDate, localTime);
-        LocalDateTime fifteenMinutes = LocalDateTime.of(localDate, localTime);
+        ZonedDateTime currentDateTime = ZonedDateTime.of(LocalDateTime.of(localDate, localTime), ZoneId.of(getTimeZone().getID()));
+        ZonedDateTime fifteenMinutes = ZonedDateTime.of(LocalDateTime.of(localDate, localTime), ZoneId.of(getTimeZone().getID()));
         fifteenMinutes = fifteenMinutes.plusMinutes(15);
         for(int i = 0; i < appointments.size(); i++){
             Appointment appointment = appointments.get(i);
@@ -137,7 +140,8 @@ public class LogInScreenController implements Initializable {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Alert");
                 alert.setHeaderText("Upcoming Appointment");
-                alert.setContentText("You have an appointment with " + appointment.getCustomer().getCustomerName() + ", in the next 15 minutes.");
+                
+                alert.setContentText("You have an appointment with " + appointment.getCustomer().getCustomerName() + ", in the next 15 minutes");
                 Optional<ButtonType> result = alert.showAndWait();
             }
         }

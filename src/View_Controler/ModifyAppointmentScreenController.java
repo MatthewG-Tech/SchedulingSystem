@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
@@ -68,7 +69,7 @@ public class ModifyAppointmentScreenController implements Initializable {
     
     private Appointment selectedAppointment;
     
-    private LocalDateTime selectedTime;
+    private ZonedDateTime selectedTime;
 
     /**
      * Initializes the controller class.
@@ -97,8 +98,8 @@ public class ModifyAppointmentScreenController implements Initializable {
 
     @FXML
     private void saveButtonAction(ActionEvent event) throws Exception {
-        LocalDateTime startTime = selectedTime;
-        LocalDateTime endTime = selectedTime.plusMinutes(30);
+        ZonedDateTime startTime = selectedTime;
+        ZonedDateTime endTime = selectedTime.plusMinutes(30);
         //Appointment tempAppointment = new Appointment(CentralData.getAppointments().size() + 1, selectedCustomer, CentralData.getUser(), titleField.getText(), descriptionField.getText(), locationField.getText(), contactField.getText(), typeField.getText(), urlField.getText(), startTime, endTime);
         selectedAppointment.setCustomer(selectedCustomer);
         selectedAppointment.setTitle(titleField.getText());
@@ -158,7 +159,7 @@ public class ModifyAppointmentScreenController implements Initializable {
         timeDropdown.setText(selectedTime.getHour() + ":" + minute);
         setDropdown();
     }
-    public void setUpAfterCustomerPicked(Appointment modifyingInput, Appointment changedAppointment, LocalDate localDate, String string, ObservableList observableList, LocalDateTime time){
+    public void setUpAfterCustomerPicked(Appointment modifyingInput, Appointment changedAppointment, LocalDate localDate, String string, ObservableList observableList, ZonedDateTime time){
         selectedAppointment = modifyingInput;
             appointmentIdLabel.setText("Appointment ID: " + changedAppointment.getAppointmentId());
         if(changedAppointment.getCustomer() != null){
@@ -202,10 +203,10 @@ public class ModifyAppointmentScreenController implements Initializable {
     
     private void setDropdown(){
         LocalDate localDate = datePicker.getValue();
-        ArrayList<LocalDateTime> bussinessHours = Time.getBussinessHours(localDate);
+        ArrayList<ZonedDateTime> bussinessHours = Time.getBussinessHours(localDate);
         timeDropdown.getItems().clear();
         for(int i = 0; i < bussinessHours.size(); i++){
-            LocalDateTime tempLocalDateTime = bussinessHours.get(i);
+            ZonedDateTime tempLocalDateTime = bussinessHours.get(i);
 
             MenuItem choice = new MenuItem();
             timeDropdown.getItems().add(choice);

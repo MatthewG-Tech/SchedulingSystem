@@ -6,6 +6,7 @@
 package Model;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -23,10 +24,10 @@ public class Appointment {
     private String contact;
     private String type;
     private String url;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private ZonedDateTime startTime;
+    private ZonedDateTime endTime;
     
-    public Appointment(int appointmentId, Customer customer, User user, String title, String description, String location, String contact, String type, String url, LocalDateTime startTime, LocalDateTime endTime){
+    public Appointment(int appointmentId, Customer customer, User user, String title, String description, String location, String contact, String type, String url, ZonedDateTime startTime, ZonedDateTime endTime){
         this.appointmentId = appointmentId;
         this.customer = customer;
         this.user = user;
@@ -76,11 +77,11 @@ public class Appointment {
         return url;
     }
     
-    public LocalDateTime getStartTime(){
+    public ZonedDateTime getStartTime(){
         return startTime;
     }
     
-    public LocalDateTime getEndTime(){
+    public ZonedDateTime getEndTime(){
         return endTime;
     }
     
@@ -120,11 +121,11 @@ public class Appointment {
         this.url = url;
     }
     
-    public void setStartTime(LocalDateTime startTime){
+    public void setStartTime(ZonedDateTime startTime){
         this.startTime = startTime;
     }
     
-    public void setEndTime(LocalDateTime endTime){
+    public void setEndTime(ZonedDateTime endTime){
         this.endTime = endTime;
     }
     

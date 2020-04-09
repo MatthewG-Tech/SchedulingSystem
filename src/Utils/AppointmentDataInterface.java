@@ -10,6 +10,8 @@ import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -37,8 +39,8 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            LocalDateTime startTime = Time.convertToLocalDateTime(result.getString("start"));
-            LocalDateTime endTime = Time.convertToLocalDateTime(result.getString("end"));
+            ZonedDateTime startTime = Time.convertToZonedDateTime(result.getString("start"));
+            ZonedDateTime endTime = Time.convertToZonedDateTime(result.getString("end"));
             //Date startTime = Time.convertToDate(result.getString("start"));
             //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
@@ -65,8 +67,8 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            LocalDateTime startTime = Time.convertToLocalDateTime(result.getString("start"));
-            LocalDateTime endTime = Time.convertToLocalDateTime(result.getString("end"));
+            ZonedDateTime startTime = Time.convertToZonedDateTime(result.getString("start"));
+            ZonedDateTime endTime = Time.convertToZonedDateTime(result.getString("end"));
             //Date startTime = Time.convertToDate(result.getString("start"));
             //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
@@ -94,8 +96,8 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            LocalDateTime startTime = Time.convertToLocalDateTime(result.getString("start"));
-            LocalDateTime endTime = Time.convertToLocalDateTime(result.getString("end"));
+            ZonedDateTime startTime = Time.convertToZonedDateTime(result.getString("start"));
+            ZonedDateTime endTime = Time.convertToZonedDateTime(result.getString("end"));
             //Date startTime = Time.convertToDate(result.getString("start"));
             //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
@@ -123,8 +125,8 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            LocalDateTime startTime = Time.convertToLocalDateTime(result.getString("start"));
-            LocalDateTime endTime = Time.convertToLocalDateTime(result.getString("end"));
+            ZonedDateTime startTime = Time.convertToZonedDateTime(result.getString("start"));
+            ZonedDateTime endTime = Time.convertToZonedDateTime(result.getString("end"));
             //Date startTime = Time.convertToDate(result.getString("start"));
             //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
@@ -148,7 +150,7 @@ public class AppointmentDataInterface {
         String url = appointmentInput.getUrl();
         String start = Time.converToDateTimeFormat(appointmentInput.getStartTime());
         String end = Time.converToDateTimeFormat(appointmentInput.getEndTime());
-        LocalDateTime temp = LocalDateTime.now();
+        ZonedDateTime temp = ZonedDateTime.now(ZoneId.of("UTC"));
         String time = Time.converToDateTimeFormat(temp);
         String sqlStatement = "INSERT INTO appointment (appointmentId, customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy)\nVALUES (" + appointmentId + ", " + customerId + ", " + userId + ", '" + title + "', '" + description +  "', '" + location +  "', '" + contact +  "', '" + type +  "', '" + url +  "', '" + start +  "', '" + end + "', '" + time + "', '" + CentralData.getUser().getUserName() + "', '" + time + "', '" + CentralData.getUser().getUserName() + "');";
         Query.makeQuery(sqlStatement);
@@ -169,7 +171,7 @@ public class AppointmentDataInterface {
         String url = appointmentInput.getUrl();
         String start = Time.converToDateTimeFormat(appointmentInput.getStartTime());
         String end = Time.converToDateTimeFormat(appointmentInput.getEndTime());
-        LocalDateTime temp = LocalDateTime.now();
+        ZonedDateTime temp = ZonedDateTime.now(ZoneId.of("UTC"));
         String time = Time.converToDateTimeFormat(temp);
         String sqlStatement = "UPDATE appointment\nSET appointmentId = " + appointmentId + ", customerId = " + customerId + ", userId = " + userId + ", title = '" + title + "', description = '" + description +  "', location = '" + location +  "', contact = '" + contact +  "', type = '" + type +  "', url = '" + url +  "', start = '" + start +  "', end = '" + end + "', lastUpdate = '" + time + "', lastUpdateBy = '" + CentralData.getUser().getUserName() + "'\nWHERE appointmentId = " + appointmentId + ";";
         Query.makeQuery(sqlStatement);

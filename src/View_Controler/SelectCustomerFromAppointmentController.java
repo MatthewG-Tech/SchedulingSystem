@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -48,7 +49,7 @@ public class SelectCustomerFromAppointmentController implements Initializable {
     private LocalDate localDate;
     private String string;
     private ObservableList obserableList;
-    private LocalDateTime time;
+    private ZonedDateTime time;
     /**
      * Initializes the controller class.
      */
@@ -113,14 +114,14 @@ public class SelectCustomerFromAppointmentController implements Initializable {
     public void setUp(Appointment chagnedAppointment){
         changedAppointment = chagnedAppointment;
     }
-    public void setUp(Appointment chagnedAppointment, LocalDate localDateInput, String stringInput, ObservableList obserableListInput, LocalDateTime timeInput){
+    public void setUp(Appointment chagnedAppointment, LocalDate localDateInput, String stringInput, ObservableList obserableListInput, ZonedDateTime timeInput){
         changedAppointment = chagnedAppointment;
         localDate = localDateInput;
         string = stringInput;
         obserableList = obserableListInput;
         time = timeInput;
     }
-    public void setUp(Appointment selectedAppointmentInput, Appointment chagnedAppointment, LocalDate localDateInput, String stringInput, ObservableList obserableListInput, LocalDateTime timeInput){
+    public void setUp(Appointment selectedAppointmentInput, Appointment chagnedAppointment, LocalDate localDateInput, String stringInput, ObservableList obserableListInput, ZonedDateTime timeInput){
         selectedAppointment = selectedAppointmentInput;
         changedAppointment = chagnedAppointment;
         localDate = localDateInput;

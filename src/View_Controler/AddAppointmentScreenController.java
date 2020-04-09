@@ -16,6 +16,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
@@ -67,7 +68,7 @@ public class AddAppointmentScreenController implements Initializable {
     
     private Customer selectedCustomer;
     
-    private LocalDateTime selectedTime;
+    private ZonedDateTime selectedTime;
 
 
     /**
@@ -102,8 +103,8 @@ public class AddAppointmentScreenController implements Initializable {
 
     @FXML
     private void saveButtonAction(ActionEvent event) throws IOException, Exception {
-        LocalDateTime startTime = selectedTime;
-        LocalDateTime endTime = selectedTime.plusMinutes(30);
+        ZonedDateTime startTime = selectedTime;
+        ZonedDateTime endTime = selectedTime.plusMinutes(30);
 
         Appointment tempAppointment = new Appointment(CentralData.getAppointments().size() + 1, selectedCustomer, CentralData.getUser(), titleField.getText(), descriptionField.getText(), locationField.getText(), contactField.getText(), typeField.getText(), urlField.getText(), startTime, endTime);
         CentralData.addAppointment(tempAppointment);
@@ -143,7 +144,7 @@ public class AddAppointmentScreenController implements Initializable {
         System.out.println("Select Time");
     }
     
-    public void setUpAfterCustomerPicked(Appointment changedAppointment, LocalDate localDate, String string, ObservableList observableList, LocalDateTime time){
+    public void setUpAfterCustomerPicked(Appointment changedAppointment, LocalDate localDate, String string, ObservableList observableList, ZonedDateTime time){
             appointmentIdLabel.setText("Appointment ID: " + changedAppointment.getAppointmentId());
         if(changedAppointment.getCustomer() != null){
             selectedCustomer = changedAppointment.getCustomer();
@@ -178,10 +179,10 @@ public class AddAppointmentScreenController implements Initializable {
     }
     private void setDropdown(){
         LocalDate localDate = datePicker.getValue();
-        ArrayList<LocalDateTime> bussinessHours = Time.getBussinessHours(localDate);
+        ArrayList<ZonedDateTime> bussinessHours = Time.getBussinessHours(localDate);
         timeDropdown.getItems().clear();
         for(int i = 0; i < bussinessHours.size(); i++){
-            LocalDateTime tempLocalDateTime = bussinessHours.get(i);
+            ZonedDateTime tempLocalDateTime = bussinessHours.get(i);
 
             MenuItem choice = new MenuItem();
             timeDropdown.getItems().add(choice);

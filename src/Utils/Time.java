@@ -26,9 +26,10 @@ public class Time {
         TimeZone timeZone = now.getTimeZone();
         return timeZone;
     }
-    public static String converToDateTimeFormat(LocalDateTime ldt){
+    public static String converToDateTimeFormat(ZonedDateTime zdt){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formatDateTime = ldt.format(formatter);
+        ZonedDateTime temp = zdt.withZoneSameInstant(ZoneId.of("UTC"));
+        String formatDateTime = temp.format(formatter);
         return formatDateTime;
     }
 
@@ -49,25 +50,28 @@ public class Time {
         LocalDate localDate = zoneDateTime.toLocalDate();
         return localDate;
     }
-    public static LocalDateTime convertToLocalDateTime(String date){
+    public static ZonedDateTime convertToZonedDateTime(String date){
         String[] dateString = date.split(" ")[0].split("-");
         String[] timeString = date.split(" ")[1].split(":");
         int year = Integer.parseInt(dateString[0]);
-        int month = Integer.parseInt(dateString[1]) - 1;
+        int month = Integer.parseInt(dateString[1]);
         int day = Integer.parseInt(dateString[2]);
         int hour = Integer.parseInt(timeString[0]);
         int minute = Integer.parseInt(timeString[1]);
         int second = 0;
         LocalDate tempLocalDate = LocalDate.of(year, month, day);
         LocalTime tempLocalTime = LocalTime.of(hour, minute, second);
-        return LocalDateTime.of(tempLocalDate, tempLocalTime);
+        LocalDateTime localDateTime = LocalDateTime.of(tempLocalDate, tempLocalTime);
+        ZonedDateTime utcTime = ZonedDateTime.of(localDateTime, ZoneId.of("UTC"));
+        ZonedDateTime localizedTime = utcTime.withZoneSameInstant(ZoneId.of(getTimeZone().getID()));
+        return localizedTime;
     }
     
     
-    public static ArrayList<LocalDateTime> getBussinessHours(LocalDate inputDate){
-        ArrayList<LocalDateTime> returnList = new ArrayList<LocalDateTime>();
-        LocalDateTime startTime = LocalDateTime.of(inputDate, LocalTime.of(8, 0));
-        LocalDateTime endTime = LocalDateTime.of(inputDate, LocalTime.of(17, 0));
+    public static ArrayList<ZonedDateTime> getBussinessHours(LocalDate inputDate){
+        ArrayList<ZonedDateTime> returnList = new ArrayList<ZonedDateTime>();
+        ZonedDateTime startTime = ZonedDateTime.of(LocalDateTime.of(inputDate, LocalTime.of(8, 0)), ZoneId.of(getTimeZone().getID()));
+        ZonedDateTime endTime = ZonedDateTime.of(LocalDateTime.of(inputDate, LocalTime.of(17, 0)), ZoneId.of(getTimeZone().getID()));
         while(startTime.isBefore(endTime)){
             returnList.add(startTime);
             startTime = startTime.plusMinutes(30);
