@@ -8,6 +8,7 @@ package Utils;
 import Model.Address;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -78,7 +79,6 @@ public class AddressDataInterface {
             int cityId = result.getInt("cityId");
             String postalCode = result.getString("postalCode");
             String phone = result.getString("phone");
-             
             addressResult = new Address(addressId, address, address2, CentralData.getCity(cityId), postalCode, phone);
             addressList.add(addressResult);
         }
@@ -95,7 +95,7 @@ public class AddressDataInterface {
         int cityid = addressInput.getCity().getCityId();
         String postalCode = addressInput.getPostalCode();
         String phone = addressInput.getPhone();
-        Date temp = new Date();
+        LocalDateTime temp = LocalDateTime.now();
         String time = Time.converToDateTimeFormat(temp);
         String sqlStatement = "INSERT INTO address (addressId, address, address2, cityid, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy)\nVALUES (" + addressId + ", '" + address +  "', '" + address2 + "', " + cityid + ", '" + postalCode +  "', '" + phone +  "', '" + time + "', '" + CentralData.getUser().getUserName() + "', '" + time + "', '" + CentralData.getUser().getUserName() + "');";
         Query.makeQuery(sqlStatement);
@@ -111,7 +111,7 @@ public class AddressDataInterface {
         int cityId = addressInput.getCity().getCityId();
         String postalCode = addressInput.getPostalCode();
         String phone = addressInput.getPhone();
-        Date temp = new Date();
+        LocalDateTime temp = LocalDateTime.now();
         String time = Time.converToDateTimeFormat(temp);
         String sqlStatement = "UPDATE address\nSET address = '" + address + "', address2 = '" + address2 + "', cityId = " + cityId + ", postalcode = '" + postalCode + "', phone = '" + phone + "', lastUpdate = '" + time + "', lastUpdateBy = '" + CentralData.getUser().getUserName() + "'\nWHERE addressId = " + addressId + ";";
         Query.makeQuery(sqlStatement);

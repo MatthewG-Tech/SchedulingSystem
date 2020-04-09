@@ -5,11 +5,16 @@
  */
 package View_Controler;
 
+import Model.Appointment;
 import Model.Customer;
 import Utils.CentralData;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,6 +42,13 @@ public class SelectCustomerFromAppointmentController implements Initializable {
     private TableColumn<Customer, String> customerName;
 
     private Boolean returnToAddScreen = true;
+    
+    private Appointment selectedAppointment;
+    private Appointment changedAppointment;
+    private LocalDate localDate;
+    private String string;
+    private ObservableList obserableList;
+    private LocalDateTime time;
     /**
      * Initializes the controller class.
      */
@@ -54,12 +66,14 @@ public class SelectCustomerFromAppointmentController implements Initializable {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene ((Pane) loader.load()));
             AddAppointmentScreenController addAppointmentScreenController = loader.<AddAppointmentScreenController>getController();
+            addAppointmentScreenController.setUpAfterCustomerPicked(changedAppointment, localDate, string, obserableList, time);
             stage.show();
         }else{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ModifyAppointmentScreen.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene ((Pane) loader.load()));
             ModifyAppointmentScreenController modifyAppointmentScreenController = loader.<ModifyAppointmentScreenController>getController();
+            modifyAppointmentScreenController.setUpAfterCustomerPicked(selectedAppointment, changedAppointment, localDate, string, obserableList, time);
             stage.show();
         }
     }
@@ -72,6 +86,7 @@ public class SelectCustomerFromAppointmentController implements Initializable {
             stage.setScene(new Scene ((Pane) loader.load()));
             AddAppointmentScreenController addAppointmentScreenController = loader.<AddAppointmentScreenController>getController();
             addAppointmentScreenController.setCustomer(customerTable.getSelectionModel().getSelectedItem());
+            addAppointmentScreenController.setUpAfterCustomerPicked(changedAppointment, localDate, string, obserableList, time);
             stage.show();
         }else{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("ModifyAppointmentScreen.fxml"));
@@ -79,6 +94,7 @@ public class SelectCustomerFromAppointmentController implements Initializable {
             stage.setScene(new Scene ((Pane) loader.load()));
             ModifyAppointmentScreenController modifyAppointmentScreenController = loader.<ModifyAppointmentScreenController>getController();
             modifyAppointmentScreenController.setCustomer(customerTable.getSelectionModel().getSelectedItem());
+            modifyAppointmentScreenController.setUpAfterCustomerPicked(selectedAppointment, changedAppointment, localDate, string, obserableList, time);
             stage.show();
         }
     }
@@ -93,5 +109,23 @@ public class SelectCustomerFromAppointmentController implements Initializable {
      */
     public void returnToModifyScreen(){
         returnToAddScreen = false;
+    }
+    public void setUp(Appointment chagnedAppointment){
+        changedAppointment = chagnedAppointment;
+    }
+    public void setUp(Appointment chagnedAppointment, LocalDate localDateInput, String stringInput, ObservableList obserableListInput, LocalDateTime timeInput){
+        changedAppointment = chagnedAppointment;
+        localDate = localDateInput;
+        string = stringInput;
+        obserableList = obserableListInput;
+        time = timeInput;
+    }
+    public void setUp(Appointment selectedAppointmentInput, Appointment chagnedAppointment, LocalDate localDateInput, String stringInput, ObservableList obserableListInput, LocalDateTime timeInput){
+        selectedAppointment = selectedAppointmentInput;
+        changedAppointment = chagnedAppointment;
+        localDate = localDateInput;
+        string = stringInput;
+        obserableList = obserableListInput;
+        time = timeInput;
     }
 }

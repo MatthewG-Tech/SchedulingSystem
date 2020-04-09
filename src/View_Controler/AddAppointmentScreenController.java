@@ -13,10 +13,14 @@ import Utils.CentralData;
 import Utils.Time;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,15 +60,15 @@ public class AddAppointmentScreenController implements Initializable {
     private DatePicker datePicker;
     @FXML
     private SplitMenuButton timeDropdown;
-    
-    
-    private Customer selectedCustomer;
-    
-    private Date selectedTime;
     @FXML
     private TextField locationField;
     @FXML
     private TextField contactField;
+    
+    private Customer selectedCustomer;
+    
+    private LocalDateTime selectedTime;
+
 
     /**
      * Initializes the controller class.
@@ -98,14 +102,9 @@ public class AddAppointmentScreenController implements Initializable {
 
     @FXML
     private void saveButtonAction(ActionEvent event) throws IOException, Exception {
-        Date startTime = selectedTime;
-        Date endTime = (Date) selectedTime.clone();
-        if(endTime.getMinutes() == 30){
-            endTime.setHours(endTime.getHours() + 1);
-            endTime.setMinutes(0);
-        }else{
-            endTime.setMinutes(30);
-        }
+        LocalDateTime startTime = selectedTime;
+        LocalDateTime endTime = selectedTime.plusMinutes(30);
+
         Appointment tempAppointment = new Appointment(CentralData.getAppointments().size() + 1, selectedCustomer, CentralData.getUser(), titleField.getText(), descriptionField.getText(), locationField.getText(), contactField.getText(), typeField.getText(), urlField.getText(), startTime, endTime);
         CentralData.addAppointment(tempAppointment);
         AppointmentDataInterface.addAppointment(tempAppointment);
@@ -126,6 +125,8 @@ public class AddAppointmentScreenController implements Initializable {
         stage.setScene(new Scene ((Pane) loader.load()));
         SelectCustomerFromAppointmentController selectCustomerFromAppointmentController = loader.<SelectCustomerFromAppointmentController>getController();
         selectCustomerFromAppointmentController.returnToAddScreen();
+        Appointment tempAppointment = new Appointment(CentralData.getAppointments().size() + 1, selectedCustomer, CentralData.getUser(), titleField.getText(), descriptionField.getText(), locationField.getText(), contactField.getText(), typeField.getText(), urlField.getText(), null, null);
+        selectCustomerFromAppointmentController.setUp(tempAppointment, datePicker.getValue(), timeDropdown.getText(), timeDropdown.getItems(), selectedTime);
         stage.show();
     }
     
@@ -136,31 +137,68 @@ public class AddAppointmentScreenController implements Initializable {
 
     @FXML
     private void datePickerAction(ActionEvent event) {
-        Date tempTime = Time.convertToDate(datePicker.getValue());
-        ArrayList<Date> bussinessHours = Time.getBussinessHours(tempTime);
         selectedTime = null;
         timeDropdown.setText("Pick A Time");
+        setDropdown();
+        System.out.println("Select Time");
+    }
+    
+    public void setUpAfterCustomerPicked(Appointment changedAppointment, LocalDate localDate, String string, ObservableList observableList, LocalDateTime time){
+            appointmentIdLabel.setText("Appointment ID: " + changedAppointment.getAppointmentId());
+        if(changedAppointment.getCustomer() != null){
+            selectedCustomer = changedAppointment.getCustomer();
+            customerLabel.setText("Customer: "+ selectedCustomer.getCustomerName());
+        }
+        if(changedAppointment.getTitle() != null){
+            titleField.setText(changedAppointment.getTitle());
+        }
+        if(changedAppointment.getDescritpion() != null){
+            descriptionField.setText(changedAppointment.getDescritpion());
+        }
+        if(changedAppointment.getType() != null){
+            typeField.setText(changedAppointment.getType());
+        }
+        if(changedAppointment.getContact() != null){
+            contactField.setText(changedAppointment.getContact());
+        }
+        if(changedAppointment.getLocation() != null){
+            locationField.setText(changedAppointment.getLocation());
+        }
+        if(changedAppointment.getUrl() != null){
+            urlField.setText(changedAppointment.getUrl());
+        }
+        datePicker.setValue(localDate);
+        timeDropdown.setText(string);
+        if(time != null){
+            selectedTime = time;
+        }
+        if(observableList.size() > 0){
+            setDropdown();
+        } 
+    }
+    private void setDropdown(){
+        LocalDate localDate = datePicker.getValue();
+        ArrayList<LocalDateTime> bussinessHours = Time.getBussinessHours(localDate);
         timeDropdown.getItems().clear();
         for(int i = 0; i < bussinessHours.size(); i++){
-            Date temp = bussinessHours.get(i);
+            LocalDateTime tempLocalDateTime = bussinessHours.get(i);
 
             MenuItem choice = new MenuItem();
             timeDropdown.getItems().add(choice);
-            String minute = "" + temp.getMinutes();
+            String minute = "" + tempLocalDateTime.getMinute();
             if(minute.length() == 1){
                 minute = "0" + minute;
             }
-            choice.setText(temp.getHours() + ":" + minute);
-            //Lambda Function Is used because the number of cities could change in the future and this will not requrie reprograming if more cities are added.
+            choice.setText(tempLocalDateTime.getHour() + ":" + minute);
+            //Lambda Function Is used because the number of time can be changed.
             choice.setOnAction((e)-> {
-                String tempMinute = "" + temp.getMinutes();
+                String tempMinute = "" + tempLocalDateTime.getMinute();
                 if(tempMinute.length() == 1){
                     tempMinute = "0" + tempMinute;
                 }
-                selectedTime = temp;
-                timeDropdown.setText(temp.getHours() + ":" + tempMinute);
+                selectedTime = tempLocalDateTime;
+                timeDropdown.setText(tempLocalDateTime.getHour() + ":" + tempMinute);
             });
         }
-        System.out.println("Select Date");
     }
 }

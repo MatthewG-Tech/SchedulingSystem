@@ -18,6 +18,9 @@ import Utils.UserDataInterface;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
@@ -123,11 +126,14 @@ public class LogInScreenController implements Initializable {
     
     private void checkForAppointment(){
         ObservableList<Appointment> appointments = CentralData.getUserAppointments();
+        LocalDate localDate = LocalDate.now();
+        LocalTime localTime = LocalTime.now();
+        LocalDateTime currentDateTime = LocalDateTime.of(localDate, localTime);
+        LocalDateTime fifteenMinutes = LocalDateTime.of(localDate, localTime);
+        fifteenMinutes = fifteenMinutes.plusMinutes(15);
         for(int i = 0; i < appointments.size(); i++){
-            Date fifteenMinutes = new Date();
-            Time.addFifteenMinutes(fifteenMinutes);
             Appointment appointment = appointments.get(i);
-            if(appointment.getStartTime().before(fifteenMinutes) && appointment.getStartTime().after(new Date())){
+            if(appointment.getStartTime().isBefore(fifteenMinutes) && appointment.getStartTime().isAfter(currentDateTime)){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Alert");
                 alert.setHeaderText("Upcoming Appointment");

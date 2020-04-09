@@ -9,6 +9,7 @@ import Model.Appointment;
 import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -36,8 +37,10 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            Date startTime = Time.convertToDate(result.getString("start"));
-            Date endTime = Time.convertToDate(result.getString("end"));
+            LocalDateTime startTime = Time.convertToLocalDateTime(result.getString("start"));
+            LocalDateTime endTime = Time.convertToLocalDateTime(result.getString("end"));
+            //Date startTime = Time.convertToDate(result.getString("start"));
+            //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             return userResult;
         }
@@ -62,8 +65,10 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            Date startTime = Time.convertToDate(result.getString("start"));
-            Date endTime = Time.convertToDate(result.getString("end"));
+            LocalDateTime startTime = Time.convertToLocalDateTime(result.getString("start"));
+            LocalDateTime endTime = Time.convertToLocalDateTime(result.getString("end"));
+            //Date startTime = Time.convertToDate(result.getString("start"));
+            //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             return userResult;
         }
@@ -89,8 +94,10 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            Date startTime = Time.convertToDate(result.getString("start"));
-            Date endTime = Time.convertToDate(result.getString("end"));
+            LocalDateTime startTime = Time.convertToLocalDateTime(result.getString("start"));
+            LocalDateTime endTime = Time.convertToLocalDateTime(result.getString("end"));
+            //Date startTime = Time.convertToDate(result.getString("start"));
+            //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             customerList.add(userResult);
         }
@@ -116,8 +123,10 @@ public class AppointmentDataInterface {
             String contact = result.getString("contact");
             String type = result.getString("type");
             String url = result.getString("url");
-            Date startTime = Time.convertToDate(result.getString("start"));
-            Date endTime = Time.convertToDate(result.getString("end"));
+            LocalDateTime startTime = Time.convertToLocalDateTime(result.getString("start"));
+            LocalDateTime endTime = Time.convertToLocalDateTime(result.getString("end"));
+            //Date startTime = Time.convertToDate(result.getString("start"));
+            //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             customerList.add(userResult);
         }
@@ -139,7 +148,7 @@ public class AppointmentDataInterface {
         String url = appointmentInput.getUrl();
         String start = Time.converToDateTimeFormat(appointmentInput.getStartTime());
         String end = Time.converToDateTimeFormat(appointmentInput.getEndTime());
-        Date temp = new Date();
+        LocalDateTime temp = LocalDateTime.now();
         String time = Time.converToDateTimeFormat(temp);
         String sqlStatement = "INSERT INTO appointment (appointmentId, customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy)\nVALUES (" + appointmentId + ", " + customerId + ", " + userId + ", '" + title + "', '" + description +  "', '" + location +  "', '" + contact +  "', '" + type +  "', '" + url +  "', '" + start +  "', '" + end + "', '" + time + "', '" + CentralData.getUser().getUserName() + "', '" + time + "', '" + CentralData.getUser().getUserName() + "');";
         Query.makeQuery(sqlStatement);
@@ -154,14 +163,15 @@ public class AppointmentDataInterface {
         int userId = appointmentInput.getUser().getUserId();
         String title = appointmentInput.getTitle();
         String description = appointmentInput.getDescritpion();
+        String location = appointmentInput.getLocation();
         String contact = appointmentInput.getContact();
         String type = appointmentInput.getType();
         String url = appointmentInput.getUrl();
         String start = Time.converToDateTimeFormat(appointmentInput.getStartTime());
         String end = Time.converToDateTimeFormat(appointmentInput.getEndTime());
-        Date temp = new Date();
+        LocalDateTime temp = LocalDateTime.now();
         String time = Time.converToDateTimeFormat(temp);
-        String sqlStatement = "UPDATE appointment\nSET appointmentId = " + appointmentId + ", customerId = " + customerId + ", userId = " + userId + ", title = '" + title + "', description = '" + description +  "', contact = '" + contact +  "', type = '" + type +  "', url = '" + url +  "', start = '" + start +  "', end = '" + end + "', lastUpdate = '" + time + "', lastUpdateBy = '" + CentralData.getUser().getUserName() + "'\nWHERE appointmentId = " + appointmentId + ";";
+        String sqlStatement = "UPDATE appointment\nSET appointmentId = " + appointmentId + ", customerId = " + customerId + ", userId = " + userId + ", title = '" + title + "', description = '" + description +  "', location = '" + location +  "', contact = '" + contact +  "', type = '" + type +  "', url = '" + url +  "', start = '" + start +  "', end = '" + end + "', lastUpdate = '" + time + "', lastUpdateBy = '" + CentralData.getUser().getUserName() + "'\nWHERE appointmentId = " + appointmentId + ";";
         Query.makeQuery(sqlStatement);
     }
     /**

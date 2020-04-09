@@ -5,6 +5,7 @@
  */
 package Model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -22,10 +23,10 @@ public class Appointment {
     private String contact;
     private String type;
     private String url;
-    private Date startTime;
-    private Date endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     
-    public Appointment(int appointmentId, Customer customer, User user, String title, String description, String location, String contact, String type, String url, Date startTime, Date endTime){
+    public Appointment(int appointmentId, Customer customer, User user, String title, String description, String location, String contact, String type, String url, LocalDateTime startTime, LocalDateTime endTime){
         this.appointmentId = appointmentId;
         this.customer = customer;
         this.user = user;
@@ -75,11 +76,11 @@ public class Appointment {
         return url;
     }
     
-    public Date getStartTime(){
+    public LocalDateTime getStartTime(){
         return startTime;
     }
     
-    public Date getEndTime(){
+    public LocalDateTime getEndTime(){
         return endTime;
     }
     
@@ -119,11 +120,11 @@ public class Appointment {
         this.url = url;
     }
     
-    public void setStartTime(Date startTime){
+    public void setStartTime(LocalDateTime startTime){
         this.startTime = startTime;
     }
     
-    public void setEndTime(Date endTime){
+    public void setEndTime(LocalDateTime endTime){
         this.endTime = endTime;
     }
     

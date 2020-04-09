@@ -7,12 +7,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="306.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="View_Controler.ModifyCustomerScreenController">
+<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="306.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controler.ModifyCustomerScreenController">
    <children>
       <AnchorPane layoutX="10.0" layoutY="12.0" prefHeight="364.0" prefWidth="286.0" style="-fx-border-color: black; -fx-border-radius: 10;">
          <children>
-            <Button layoutX="216.0" layoutY="323.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
             <Label layoutX="14.0" layoutY="14.0" text="Modify Customer">
                <font>
                   <Font size="30.0" />
@@ -32,6 +30,7 @@
             <TextField fx:id="postalCodeField" layoutX="112.0" layoutY="252.0" />
             <TextField fx:id="phoneField" layoutX="112.0" layoutY="286.0" />
             <Button layoutX="139.0" layoutY="323.0" mnemonicParsing="false" onAction="#saveButtonAction" prefHeight="27.0" prefWidth="56.0" text="Save" />
+            <Button layoutX="216.0" layoutY="323.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
          </children>
       </AnchorPane>
    </children>

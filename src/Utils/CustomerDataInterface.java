@@ -10,6 +10,7 @@ import Utils.Time;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -102,7 +103,7 @@ public class CustomerDataInterface {
         if(active){
             activeInt = 1;
         }
-        Date temp = new Date();
+        LocalDateTime temp = LocalDateTime.now();
         String time = Time.converToDateTimeFormat(temp);
         String sqlStatement = "INSERT INTO customer (customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy)\nVALUES (" + customerId + ", '" + customerName +  "', " + addressId +  ", " + activeInt + ", '" + time + "', '" + CentralData.getUser().getUserName() + "', '" + time + "', '" + CentralData.getUser().getUserName() + "');";
         Query.makeQuery(sqlStatement);
@@ -114,7 +115,7 @@ public class CustomerDataInterface {
     public static void updateCustomer(Customer customerInput) throws SQLException, Exception{
         String customerName = customerInput.getCustomerName();
         int addressId = customerInput.getAddress().getAddressId();
-        Date temp = new Date();
+        LocalDateTime temp = LocalDateTime.now();
         String time = Time.converToDateTimeFormat(temp);
         String sqlStatement = "UPDATE customer\nSET customerName = '" + customerName + "', addressId = '" + addressId + "', lastUpdate = '" + time + "', lastUpdateBy = '" + CentralData.getUser().getUserName() + "'\nWHERE customerId = " + customerInput.getCustomerId() + ";";
         Query.makeQuery(sqlStatement);
