@@ -32,12 +32,23 @@ public class Time {
         String formatDateTime = temp.format(formatter);
         return formatDateTime;
     }
-
-    
-    
-    
-    
-    
+    public static String formatString(ZonedDateTime date){
+        String minute = "" + date.getMinute();
+        int hour = date.getHour();
+        String ending = "AM";
+        if(minute.length() == 1){
+            minute = "0" + minute;
+        }
+        if(hour > 11){
+            ending = "PM";
+            if(hour > 12){
+                hour -= 12;
+            }
+        }else if(hour == 0){
+            hour = 12;
+        }
+        return date.getMonthValue() + "-" + date.getDayOfMonth() + "-" + date.getYear() + " " + hour + ":" + minute + " " + ending;
+    }
     public static Date convertToDate(LocalDate localDate){
         Calendar calendar = Calendar.getInstance();
         calendar.set(localDate.getYear(), localDate.getMonthValue() - 1, localDate.getDayOfMonth());
@@ -68,10 +79,10 @@ public class Time {
     }
     
     
-    public static ArrayList<ZonedDateTime> getBussinessHours(LocalDate inputDate){
+    public static ArrayList<ZonedDateTime> getBussinessHours(LocalDate inputDate, String zoneId){
         ArrayList<ZonedDateTime> returnList = new ArrayList<ZonedDateTime>();
-        ZonedDateTime startTime = ZonedDateTime.of(LocalDateTime.of(inputDate, LocalTime.of(8, 0)), ZoneId.of(getTimeZone().getID()));
-        ZonedDateTime endTime = ZonedDateTime.of(LocalDateTime.of(inputDate, LocalTime.of(17, 0)), ZoneId.of(getTimeZone().getID()));
+        ZonedDateTime startTime = ZonedDateTime.of(LocalDateTime.of(inputDate, LocalTime.of(8, 0)), ZoneId.of(zoneId)).withZoneSameInstant(ZoneId.of(getTimeZone().getID()));
+        ZonedDateTime endTime = ZonedDateTime.of(LocalDateTime.of(inputDate, LocalTime.of(17, 0)), ZoneId.of(zoneId)).withZoneSameInstant(ZoneId.of(getTimeZone().getID()));
         while(startTime.isBefore(endTime)){
             returnList.add(startTime);
             startTime = startTime.plusMinutes(30);

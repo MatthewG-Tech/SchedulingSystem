@@ -96,24 +96,33 @@ public class ModifyCustomerScreenController implements Initializable {
 
     @FXML
     private void saveButtonAction(ActionEvent event) throws Exception {
-        Address tempAddress = selectedCustomer.getAddress();
-        tempAddress.setAddress(addressField.getText());
-        tempAddress.setAddress2(address2Field.getText());
-        tempAddress.setCity(CentralData.getCity(selectedCityId));
-        tempAddress.setPostalCode(postalCodeField.getText());
-        tempAddress.setPhone(phoneField.getText());
-        selectedCustomer.setCustomerName(customerNameField.getText());
-        selectedCustomer.setAddress(tempAddress);
+        try{
+            validateInput(customerNameField.getText(), addressField.getText(), selectedCityId, postalCodeField.getText(), phoneField.getText());
+            Address tempAddress = selectedCustomer.getAddress();
+            tempAddress.setAddress(addressField.getText());
+            tempAddress.setAddress2(address2Field.getText());
+            tempAddress.setCity(CentralData.getCity(selectedCityId));
+            tempAddress.setPostalCode(postalCodeField.getText());
+            tempAddress.setPhone(phoneField.getText());
+            selectedCustomer.setCustomerName(customerNameField.getText());
+            selectedCustomer.setAddress(tempAddress);
 
-        AddressDataInterface.updateAddress(tempAddress);
-        CustomerDataInterface.updateCustomer(selectedCustomer);
-        
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerScreen.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene ((Pane) loader.load()));
-        CustomerScreenController customerScreenController = loader.<CustomerScreenController>getController();
-        stage.show();
-        
+            AddressDataInterface.updateAddress(tempAddress);
+            CustomerDataInterface.updateCustomer(selectedCustomer);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomerScreen.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene ((Pane) loader.load()));
+            CustomerScreenController customerScreenController = loader.<CustomerScreenController>getController();
+            stage.show();
+        }catch(IllegalArgumentException e){
+            System.out.println(e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Invalid Input");
+            alert.setContentText(e.getMessage()+"");
+            alert.showAndWait();
+        } 
         System.out.println("Customer Saved");
     }
     
@@ -129,5 +138,22 @@ public class ModifyCustomerScreenController implements Initializable {
         cityDropdown.setText(selectedCustomer.getAddress().getCity().getCityName());
         System.out.println(selectedCustomer);
     }
-    
+    public Boolean validateInput(String customerName, String address, int cityId, String postalCode, String phone){    
+        if(customerName.equals("")){
+            throw new IllegalArgumentException("You must enter a customer name");
+        }
+        if(address.equals("")){
+            throw new IllegalArgumentException("You must enter a address");
+        }
+        if(cityId == -1){
+            throw new IllegalArgumentException("You must select a city");
+        }
+        if(postalCode.equals("")){
+            throw new IllegalArgumentException("You must enter a postal code");
+        }
+        if(phone.equals("")){
+            throw new IllegalArgumentException("You must enter a phone number");
+        }
+        return true;
+    }
 }

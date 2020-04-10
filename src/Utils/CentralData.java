@@ -25,6 +25,7 @@ public class CentralData {
     private static ObservableList<Address> addresses;
     private static ObservableList<City> cities;
     private static ObservableList<Country> countries;
+    private static ObservableList<User> users;
     
     /**
     * Set User
@@ -32,6 +33,13 @@ public class CentralData {
     */
     public static void setUser(User userInput){
         user = userInput;
+    }
+    /**
+    * Set User
+    * 
+    */
+    public static void setUsers(ObservableList<User> usersInput){
+        users = usersInput;
     }
     /**
     * Set User Appointments
@@ -137,6 +145,13 @@ public class CentralData {
     */
     public static User getUser(){
         return user;
+    }
+    /**
+    * Get Users
+    * 
+    */
+    public static ObservableList<User> getUsers(){
+        return users;
     }
     /**
     * Get User Appointments

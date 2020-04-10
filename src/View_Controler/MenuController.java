@@ -9,6 +9,7 @@ import Model.Address;
 import Model.Appointment;
 import Utils.AppointmentDataInterface;
 import Utils.CentralData;
+import Utils.Time;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -19,6 +20,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -35,6 +38,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -60,7 +64,7 @@ public class MenuController implements Initializable {
     @FXML
     private TableColumn<Appointment, String> appointmentType;
     @FXML
-    private TableColumn<Appointment, Date> appointmentTime;
+    private TableColumn<Appointment, String> appointmentTime;
 
     /**
      * Initializes the controller class.
@@ -78,7 +82,12 @@ public class MenuController implements Initializable {
         appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
         appointmentContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         appointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        appointmentTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        appointmentTime.setText("Time in Local Time");
+        appointmentTime.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Appointment, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Appointment, String> p) {
+                return new ReadOnlyObjectWrapper(Time.formatString(p.getValue().getStartTime()));
+            }
+         });
         sortByWeekButton.setSelected(false);
         sortByMonthButton.setSelected(true);
         sortByMonth();

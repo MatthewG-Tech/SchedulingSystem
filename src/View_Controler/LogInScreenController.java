@@ -92,19 +92,22 @@ public class LogInScreenController implements Initializable {
     @FXML
     private void logInButtonAction(ActionEvent event) throws IOException, Exception {
         System.out.println("Log In Button Pressed.");
-        if(doUserNamePasswordMatch(userNameField.getText(), passwordField.getText())){
-            successfulLogIn(event, userNameField.getText());
-        }else{
+        try{
+            if(doUserNamePasswordMatch(userNameField.getText(), passwordField.getText())){
+                successfulLogIn(event, userNameField.getText());
+            }
+        }catch (IllegalArgumentException e){
+            System.out.println("The Username and Password need to match.");
             unsuccessfulLogIn();
         }
     }
     
     private Boolean doUserNamePasswordMatch(String userName, String password) throws SQLException, Exception{
         User result = UserDataInterface.getUser(userName);
-        if(result != null){
-            return password.equals(UserDataInterface.getUser(userName).getPassword());
+        if(result != null && password.equals(UserDataInterface.getUser(userName).getPassword())){
+            return true;
         }
-        return false;
+        throw new IllegalArgumentException("The Username and Password need to match.");
     }
     
     private void successfulLogIn(ActionEvent event, String userNameInput) throws IOException, Exception{
@@ -113,6 +116,7 @@ public class LogInScreenController implements Initializable {
         CentralData.setCutomers(CustomerDataInterface.getAllCustomers());
         CentralData.setAppointments(AppointmentDataInterface.getAllAppointments());
         CentralData.setUserAppointments(AppointmentDataInterface.getAllUserAppointments(CentralData.getUser().getUserId()));
+        CentralData.setUsers(UserDataInterface.getUsers());
         checkForAppointment();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Menu.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -142,7 +146,7 @@ public class LogInScreenController implements Initializable {
                 alert.setTitle("Alert");
                 alert.setHeaderText("Upcoming Appointment");
                 
-                alert.setContentText("You have an appointment with " + appointment.getCustomer().getCustomerName() + ", in the next 15 minutes");
+                alert.setContentText("You have an appointment with " + appointment.getCustomer().getCustomerName() + ", at " + appointment.getStartTime().getHour() + ":" + appointment.getStartTime().getMinute());
                 Optional<ButtonType> result = alert.showAndWait();
             }
         }

@@ -30,6 +30,7 @@
             <Button layoutX="309.0" layoutY="418.0" mnemonicParsing="false" onAction="#modifyButtonAction" text="Modify" />
             <Button layoutX="382.0" layoutY="418.0" mnemonicParsing="false" onAction="#deleteButtonAction" prefHeight="27.0" prefWidth="56.0" text="Delete" />
             <Button layoutX="235.0" layoutY="418.0" mnemonicParsing="false" onAction="#createButtonAction" prefHeight="27.0" prefWidth="56.0" text="Create" />
+            <Button layoutX="545.0" layoutY="19.0" mnemonicParsing="false" onAction="#generateReportAction" text="Generate Reports" />
          </children>
       </AnchorPane>
    </children>

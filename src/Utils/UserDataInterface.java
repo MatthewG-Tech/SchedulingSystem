@@ -5,9 +5,12 @@
  */
 package Utils;
 
+import Model.Appointment;
 import Model.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -49,5 +52,24 @@ public class UserDataInterface {
              return userResult;
         }
         return null;
+    }
+    /**
+    * Get All Users
+    * Returns Users
+    */
+    public static ObservableList<User> getUsers() throws SQLException, Exception{
+        ObservableList<User> userList = FXCollections.observableArrayList();
+        String sqlStatement="select * FROM user";
+        Query.makeQuery(sqlStatement);
+        User userResult;
+        ResultSet result = Query.getResult();
+        while(result.next()){
+             int userId = result.getInt("userId");
+             String userName = result.getString("userName");
+             String password = result.getString("password");
+             userResult= new User(userId, userName, password);
+             userList.add(userResult);
+        }
+        return userList;
     }
 }

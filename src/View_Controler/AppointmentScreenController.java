@@ -9,11 +9,20 @@ import Model.Appointment;
 import Model.City;
 import Utils.AppointmentDataInterface;
 import Utils.CentralData;
+import Utils.Time;
+import static Utils.Time.getTimeZone;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,11 +33,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  * FXML Controller class
@@ -49,7 +61,7 @@ public class AppointmentScreenController implements Initializable {
     @FXML
     private TableColumn<Appointment, String> appointmentType;
     @FXML
-    private TableColumn<Appointment, Date> appointmentTime;
+    private TableColumn<Appointment, String> appointmentTime;
 
     /**
      * Initializes the controller class.
@@ -61,9 +73,15 @@ public class AppointmentScreenController implements Initializable {
         appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
         appointmentContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         appointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        appointmentTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        appointmentTable.setItems(CentralData.getAppointments());
-    }    
+        appointmentTime.setText("Time in Local Time");
+        appointmentTime.setCellValueFactory(new Callback<CellDataFeatures<Appointment, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(CellDataFeatures<Appointment, String> p) {
+                return new ReadOnlyObjectWrapper(Time.formatString(p.getValue().getStartTime()));
+            }
+         });
+        ObservableList<Appointment> temp = CentralData.getAppointments();
+        appointmentTable.setItems(temp);
+    }
 
     @FXML
     private void backButtonAction(ActionEvent event) throws IOException {
@@ -100,7 +118,6 @@ public class AppointmentScreenController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
                 CentralData.removeAppointment(temp);
-                appointmentTable.setItems(CentralData.getUserAppointments());
                 AppointmentDataInterface.deleteAppointment(temp.getAppointmentId());
                 appointmentTable.setItems(CentralData.getAppointments());
             }
@@ -118,5 +135,16 @@ public class AppointmentScreenController implements Initializable {
         stage.show();
         System.out.println("Appointment Create");
     }
+
+    @FXML
+    private void generateReportAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ReportMenu.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene ((Pane) loader.load()));
+        ReportMenuController reportMenu = loader.<ReportMenuController>getController();
+        stage.show();
+    }
+
+
     
 }

@@ -8,6 +8,7 @@ package View_Controler;
 import Model.Appointment;
 import Model.City;
 import Model.Customer;
+import Model.User;
 import Utils.AppointmentDataInterface;
 import Utils.CentralData;
 import Utils.Time;
@@ -51,8 +52,6 @@ public class ModifyAppointmentScreenController implements Initializable {
     @FXML
     private TextField descriptionField;
     @FXML
-    private TextField locationField;
-    @FXML
     private TextField typeField;
     @FXML
     private TextField urlField;
@@ -70,6 +69,10 @@ public class ModifyAppointmentScreenController implements Initializable {
     private Appointment selectedAppointment;
     
     private ZonedDateTime selectedTime;
+    @FXML
+    private Label locationLabel;
+    
+    private String location = "";
 
     /**
      * Initializes the controller class.
@@ -98,25 +101,34 @@ public class ModifyAppointmentScreenController implements Initializable {
 
     @FXML
     private void saveButtonAction(ActionEvent event) throws Exception {
-        ZonedDateTime startTime = selectedTime;
-        ZonedDateTime endTime = selectedTime.plusMinutes(30);
-        //Appointment tempAppointment = new Appointment(CentralData.getAppointments().size() + 1, selectedCustomer, CentralData.getUser(), titleField.getText(), descriptionField.getText(), locationField.getText(), contactField.getText(), typeField.getText(), urlField.getText(), startTime, endTime);
-        selectedAppointment.setCustomer(selectedCustomer);
-        selectedAppointment.setTitle(titleField.getText());
-        selectedAppointment.setDescription(descriptionField.getText());
-        selectedAppointment.setLocation(locationField.getText());
-        selectedAppointment.setContact(contactField.getText());
-        selectedAppointment.setType(typeField.getText());
-        selectedAppointment.setUrl(urlField.getText());
-        selectedAppointment.setStartTime(startTime);
-        selectedAppointment.setEndTime(endTime);
-        AppointmentDataInterface.updateAppointment(selectedAppointment);
-        
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("AppointmentScreen.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene ((Pane) loader.load()));
-        AppointmentScreenController appointmentScreenController = loader.<AppointmentScreenController>getController();
-        stage.show();
+        try{
+            validateInput(selectedCustomer, titleField.getText(), descriptionField.getText(), contactField.getText(), typeField.getText(), urlField.getText());
+            ZonedDateTime startTime = selectedTime;
+            ZonedDateTime endTime = selectedTime.plusMinutes(30);
+            selectedAppointment.setCustomer(selectedCustomer);
+            selectedAppointment.setTitle(titleField.getText());
+            selectedAppointment.setDescription(descriptionField.getText());
+            selectedAppointment.setLocation(location);
+            selectedAppointment.setContact(contactField.getText());
+            selectedAppointment.setType(typeField.getText());
+            selectedAppointment.setUrl(urlField.getText());
+            selectedAppointment.setStartTime(startTime);
+            selectedAppointment.setEndTime(endTime);
+            AppointmentDataInterface.updateAppointment(selectedAppointment);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AppointmentScreen.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene ((Pane) loader.load()));
+            AppointmentScreenController appointmentScreenController = loader.<AppointmentScreenController>getController();
+            stage.show();
+        }catch(IllegalArgumentException e){
+            System.out.println(e);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Invalid Input");
+            alert.setContentText(e.getMessage()+"");
+            alert.showAndWait();
+        }  
         
         System.out.println("Appointment Saved");
     }
@@ -128,7 +140,7 @@ public class ModifyAppointmentScreenController implements Initializable {
         stage.setScene(new Scene ((Pane) loader.load()));
         SelectCustomerFromAppointmentController selectCustomerFromAppointmentController = loader.<SelectCustomerFromAppointmentController>getController();
         selectCustomerFromAppointmentController.returnToModifyScreen();
-        Appointment tempAppointment = new Appointment(selectedAppointment.getAppointmentId(), selectedCustomer, CentralData.getUser(), titleField.getText(), descriptionField.getText(), locationField.getText(), contactField.getText(), typeField.getText(), urlField.getText(), null, null);
+        Appointment tempAppointment = new Appointment(selectedAppointment.getAppointmentId(), selectedCustomer, CentralData.getUser(), titleField.getText(), descriptionField.getText(), location, contactField.getText(), typeField.getText(), urlField.getText(), null, null);
         selectCustomerFromAppointmentController.setUp(selectedAppointment, tempAppointment, datePicker.getValue(), timeDropdown.getText(), timeDropdown.getItems(), selectedTime);
         stage.show();
 
@@ -137,6 +149,9 @@ public class ModifyAppointmentScreenController implements Initializable {
     public void setCustomer(Customer customer){
         selectedCustomer = customer;
         customerLabel.setText("Customer: "+ customer.getCustomerName());
+        location = customer.getAddress().getCity().getCityName();
+        locationLabel.setText("Location: " + location);
+        timeDropdown.setText("Pick A Time");
     }
     
     public void setUp(Appointment appointment){
@@ -148,34 +163,31 @@ public class ModifyAppointmentScreenController implements Initializable {
         descriptionField.setText(appointment.getDescritpion());
         typeField.setText(appointment.getType());
         contactField.setText(appointment.getContact());
-        locationField.setText(appointment.getLocation());
+        location = appointment.getLocation();
+        locationLabel.setText("Locaiton: " + appointment.getLocation());
         urlField.setText(appointment.getUrl());
         datePicker.setValue(selectedAppointment.getStartTime().toLocalDate());
         selectedTime = selectedAppointment.getStartTime();
         String minute = "" + selectedTime.getMinute();
-            int hour = selectedTime.getHour();
-            String ending = "AM";
-            if(minute.length() == 1){
-                minute = "0" + minute;
+        int hour = selectedTime.getHour();
+        String ending = "AM";
+        if(minute.length() == 1){
+            minute = "0" + minute;
+        }
+        if(hour > 11){
+            ending = "PM";
+            if(hour > 12){
+                hour -= 12;
             }
-            if(hour > 11){
-                ending = "PM";
-                if(hour > 12){
-                    hour -= 12;
-                }
-            }else if(hour == 0){
-                hour = 12;
-            }
+        }else if(hour == 0){
+            hour = 12;
+        }
         timeDropdown.setText(hour + ":" + minute + " " + ending);
         setDropdown();
     }
     public void setUpAfterCustomerPicked(Appointment modifyingInput, Appointment changedAppointment, LocalDate localDate, String string, ObservableList observableList, ZonedDateTime time){
         selectedAppointment = modifyingInput;
-            appointmentIdLabel.setText("Appointment ID: " + changedAppointment.getAppointmentId());
-        if(changedAppointment.getCustomer() != null){
-            selectedCustomer = changedAppointment.getCustomer();
-            customerLabel.setText("Customer: "+ selectedCustomer.getCustomerName());
-        }
+        appointmentIdLabel.setText("Appointment ID: " + changedAppointment.getAppointmentId());
         if(changedAppointment.getTitle() != null){
             titleField.setText(changedAppointment.getTitle());
         }
@@ -188,20 +200,9 @@ public class ModifyAppointmentScreenController implements Initializable {
         if(changedAppointment.getContact() != null){
             contactField.setText(changedAppointment.getContact());
         }
-        if(changedAppointment.getLocation() != null){
-            locationField.setText(changedAppointment.getLocation());
-        }
         if(changedAppointment.getUrl() != null){
             urlField.setText(changedAppointment.getUrl());
         }
-        datePicker.setValue(localDate);
-        timeDropdown.setText(string);
-        if(time != null){
-            selectedTime = time;
-        }
-        if(observableList.size() > 0){
-            setDropdown();
-        } 
     }
     @FXML
     private void datePickerAction(ActionEvent event) {
@@ -213,7 +214,15 @@ public class ModifyAppointmentScreenController implements Initializable {
     
     private void setDropdown(){
         LocalDate localDate = datePicker.getValue();
-        ArrayList<ZonedDateTime> bussinessHours = Time.getBussinessHours(localDate);
+        String zoneId = "";
+        if(location.equals("London")){
+            zoneId = "Europe/London";
+        }else if(location.equals("New York")){
+            zoneId = "US/Eastern";
+        }else if(location.equals("Phoenix")){
+            zoneId = "America/Phoenix";
+        }
+        ArrayList<ZonedDateTime> bussinessHours = Time.getBussinessHours(localDate, zoneId);
         timeDropdown.getItems().clear();
         for(int i = 0; i < bussinessHours.size(); i++){
             ZonedDateTime tempLocalDateTime = bussinessHours.get(i);
@@ -256,5 +265,60 @@ public class ModifyAppointmentScreenController implements Initializable {
             });
         }
     }
-    
+    public Boolean validateInput(Customer customer, String title, String description, String location, String contact, String type, String url, ZonedDateTime startTime, ZonedDateTime endTime){
+        return true;
+    }
+    public Boolean validateInput(Customer customer, String title, String description, String contact, String type, String url){
+        if(customer == null){
+            throw new IllegalArgumentException("You must select a customer");
+        }
+        if(title.equals("")){
+            throw new IllegalArgumentException("You must enter a title");
+        }
+        if(description.equals("")){
+            throw new IllegalArgumentException("You must enter a description");
+        }
+        if(contact.equals("")){
+            throw new IllegalArgumentException("You must enter a contact");
+        }
+        if(type.equals("")){
+            throw new IllegalArgumentException("You must enter a type");
+        }
+        if(url.equals("")){
+            throw new IllegalArgumentException("You must enter a url");
+        }
+        if(selectedTime == null){
+            throw new IllegalArgumentException("You must select a date and time");
+        }
+        if(selectedTime.isBefore(ZonedDateTime.now())){
+            throw new IllegalArgumentException("You must select a date and time that is after the current time");
+        }
+        if(!userHasAnotherApointmentAtThisTime(selectedTime)){
+            throw new IllegalArgumentException("The consultant already has an appointment booked at this time");
+        }
+        if(!customerHasAnotherApointmentAtThisTime(selectedTime, customer)){
+            throw new IllegalArgumentException("The customer already has an appointment booked at this time");
+        }
+        return true;
+    }
+    public Boolean userHasAnotherApointmentAtThisTime(ZonedDateTime time){
+        ObservableList<Appointment> appointments = CentralData.getAppointments();
+        for(int i = 0; i<appointments.size(); i++){
+            Appointment appointment = appointments.get(i);
+            if(appointment.getStartTime().equals(time) && appointment.getUser().equals(selectedAppointment.getUser()) && appointment.getAppointmentId() != selectedAppointment.getAppointmentId()){
+                return false;
+            }
+        }
+        return true;
+    }
+    public Boolean customerHasAnotherApointmentAtThisTime(ZonedDateTime time, Customer customer){
+        ObservableList<Appointment> appointments = CentralData.getAppointments();
+        for(int i = 0; i<appointments.size(); i++){
+            Appointment appointment = appointments.get(i);
+            if(appointment.getStartTime().equals(time) && appointment.getCustomer().equals(customer) && appointment.getAppointmentId() != selectedAppointment.getAppointmentId()){
+                return false;
+            }
+        }
+        return true;
+    }
 }

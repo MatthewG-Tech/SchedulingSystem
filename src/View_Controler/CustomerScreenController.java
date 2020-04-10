@@ -5,14 +5,18 @@
  */
 package View_Controler;
 
+import Model.Appointment;
 import Model.Customer;
 import Utils.AddressDataInterface;
+import Utils.AppointmentDataInterface;
 import Utils.CentralData;
 import Utils.CustomerDataInterface;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -48,7 +52,6 @@ public class CustomerScreenController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         customerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         customerName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         customerTable.setItems(CentralData.getCustomers());
@@ -86,6 +89,20 @@ public class CustomerScreenController implements Initializable {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
+                ObservableList<Appointment> allAppointments = CentralData.getAppointments();
+                int initialSize = allAppointments.size();
+                ArrayList<Appointment> appointmentsToDelete = new ArrayList<Appointment>();
+                for(int i = 0; i < initialSize; i++){
+                    Appointment tempAppointment= allAppointments.get(i);
+                    if(tempAppointment.getCustomer().equals(temp)){
+                        AppointmentDataInterface.deleteAppointment(tempAppointment.getAppointmentId());
+                        appointmentsToDelete.add(tempAppointment);
+                        
+                    }
+                }
+                for(int i = 0; i < appointmentsToDelete.size(); i++){
+                    CentralData.removeAppointment(appointmentsToDelete.get(i));
+                }
                 CustomerDataInterface.deleteCustomer(temp.getCustomerId());
                 AddressDataInterface.deleteAddress(temp.getAddress().getAddressId());
                 CentralData.removeCustomer(temp);

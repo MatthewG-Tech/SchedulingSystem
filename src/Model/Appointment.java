@@ -41,6 +41,7 @@ public class Appointment {
         this.endTime = endTime;
     }
     
+    
     public int getAppointmentId(){
         return appointmentId;
     }
