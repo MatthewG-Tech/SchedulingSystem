@@ -153,10 +153,20 @@ public class ModifyAppointmentScreenController implements Initializable {
         datePicker.setValue(selectedAppointment.getStartTime().toLocalDate());
         selectedTime = selectedAppointment.getStartTime();
         String minute = "" + selectedTime.getMinute();
-        if(minute.length() == 1){
-            minute = "0" + minute;
-        }
-        timeDropdown.setText(selectedTime.getHour() + ":" + minute);
+            int hour = selectedTime.getHour();
+            String ending = "AM";
+            if(minute.length() == 1){
+                minute = "0" + minute;
+            }
+            if(hour > 11){
+                ending = "PM";
+                if(hour > 12){
+                    hour -= 12;
+                }
+            }else if(hour == 0){
+                hour = 12;
+            }
+        timeDropdown.setText(hour + ":" + minute + " " + ending);
         setDropdown();
     }
     public void setUpAfterCustomerPicked(Appointment modifyingInput, Appointment changedAppointment, LocalDate localDate, String string, ObservableList observableList, ZonedDateTime time){
@@ -211,18 +221,38 @@ public class ModifyAppointmentScreenController implements Initializable {
             MenuItem choice = new MenuItem();
             timeDropdown.getItems().add(choice);
             String minute = "" + tempLocalDateTime.getMinute();
+            int hour = tempLocalDateTime.getHour();
+            String ending = "AM";
             if(minute.length() == 1){
                 minute = "0" + minute;
             }
-            choice.setText(tempLocalDateTime.getHour() + ":" + minute);
-            //Lambda Function Is used because the number of time can be changed.
+            if(hour > 11){
+                ending = "PM";
+                if(hour > 12){
+                    hour -= 12;
+                }
+            }else if(hour == 0){
+                hour = 12;
+            }
+            choice.setText(hour + ":" + minute + " " + ending);
+            //Lambda Function Is used because the number of times can be changed.
             choice.setOnAction((e)-> {
                 String tempMinute = "" + tempLocalDateTime.getMinute();
+                int tempHour = tempLocalDateTime.getHour();
+                String tempEnding = "AM";
                 if(tempMinute.length() == 1){
                     tempMinute = "0" + tempMinute;
                 }
+                if(tempHour > 11){
+                    tempEnding = "PM";
+                    if(tempHour > 12){
+                        tempHour -= 12;
+                    }
+                }else if(tempHour == 0){
+                    tempHour = 12;
+                }
                 selectedTime = tempLocalDateTime;
-                timeDropdown.setText(tempLocalDateTime.getHour() + ":" + tempMinute);
+                timeDropdown.setText(tempHour + ":" + tempMinute + " " + tempEnding);
             });
         }
     }

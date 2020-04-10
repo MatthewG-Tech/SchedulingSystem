@@ -5,17 +5,22 @@
  */
 package View_Controler;
 
+import Model.Address;
 import Model.Appointment;
 import Utils.AppointmentDataInterface;
 import Utils.CentralData;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -74,7 +79,9 @@ public class MenuController implements Initializable {
         appointmentContact.setCellValueFactory(new PropertyValueFactory<>("contact"));
         appointmentType.setCellValueFactory(new PropertyValueFactory<>("type"));
         appointmentTime.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        appointmentTable.setItems(CentralData.getUserAppointments());
+        sortByWeekButton.setSelected(false);
+        sortByMonthButton.setSelected(true);
+        sortByMonth();
     }    
 
     @FXML
@@ -83,7 +90,6 @@ public class MenuController implements Initializable {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene ((Pane) loader.load()));
         CustomerScreenController userScreenController = loader.<CustomerScreenController>getController();
-        //userScreenController.setUp(partToBeModifiedIndex,temp);
         stage.show();
     }
 
@@ -93,7 +99,6 @@ public class MenuController implements Initializable {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene ((Pane) loader.load()));
         AppointmentScreenController appointmentScreenController = loader.<AppointmentScreenController>getController();
-        //appointmentScreenController.setUp(partToBeModifiedIndex,temp);
         stage.show();
     }
     
@@ -116,11 +121,40 @@ public class MenuController implements Initializable {
     private void sortByWeekButtonAction(ActionEvent event) {
         sortByWeekButton.setSelected(true);
         sortByMonthButton.setSelected(false);
+        sortByWeek();
+        System.out.println("Sort By Week");
     }
 
     @FXML
     private void sortByMonthButtonAction(ActionEvent event) {
         sortByWeekButton.setSelected(false);
         sortByMonthButton.setSelected(true);
+        sortByMonth();
+        System.out.println("Sort By Month");
+    }
+    
+    private void sortByWeek(){
+        ObservableList<Appointment> list = CentralData.getUserAppointments();
+        ObservableList<Appointment> newList = FXCollections.observableArrayList();
+        for(int i = 0; i < list.size(); i++){
+            Appointment appointment = list.get(i);
+            if(appointment.getStartTime().toLocalDate().isBefore(LocalDate.now().plusDays(8)) && appointment.getStartTime().toLocalDate().isAfter(LocalDate.now().minusDays(1))){
+                newList.add(appointment);
+            }
+        }
+        appointmentTable.setItems(newList);
+    }
+    private void sortByMonth(){
+        ObservableList<Appointment> list = CentralData.getUserAppointments();
+        ObservableList<Appointment> newList = FXCollections.observableArrayList();
+        for(int i = 0; i < list.size(); i++){
+            Appointment appointment = list.get(i);
+            LocalDate temp1 = LocalDate.now();
+            temp1 = temp1.plusMonths(1);
+            if(appointment.getStartTime().toLocalDate().isBefore(LocalDate.now().plusMonths(1).plusDays(1)) && appointment.getStartTime().toLocalDate().isAfter(LocalDate.now().minusDays(1))){
+                newList.add(appointment);
+            }
+        }
+        appointmentTable.setItems(newList);
     }
 }

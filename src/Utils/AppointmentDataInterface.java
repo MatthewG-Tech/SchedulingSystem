@@ -41,8 +41,6 @@ public class AppointmentDataInterface {
             String url = result.getString("url");
             ZonedDateTime startTime = Time.convertToZonedDateTime(result.getString("start"));
             ZonedDateTime endTime = Time.convertToZonedDateTime(result.getString("end"));
-            //Date startTime = Time.convertToDate(result.getString("start"));
-            //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             return userResult;
         }
@@ -69,8 +67,6 @@ public class AppointmentDataInterface {
             String url = result.getString("url");
             ZonedDateTime startTime = Time.convertToZonedDateTime(result.getString("start"));
             ZonedDateTime endTime = Time.convertToZonedDateTime(result.getString("end"));
-            //Date startTime = Time.convertToDate(result.getString("start"));
-            //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             return userResult;
         }
@@ -127,8 +123,6 @@ public class AppointmentDataInterface {
             String url = result.getString("url");
             ZonedDateTime startTime = Time.convertToZonedDateTime(result.getString("start"));
             ZonedDateTime endTime = Time.convertToZonedDateTime(result.getString("end"));
-            //Date startTime = Time.convertToDate(result.getString("start"));
-            //Date endTime = Time.convertToDate(result.getString("end"));
             userResult= new Appointment(appointmentId, CustomerDataInterface.getCustomer(customerId), UserDataInterface.getUser(userId), title, description, location, contact, type, url, startTime, endTime);
             customerList.add(userResult);
         }

@@ -7,6 +7,7 @@ package View_Controler;
 
 import Model.Appointment;
 import Model.User;
+import Utils.ActivityLoger;
 import Utils.AddressDataInterface;
 import Utils.AppointmentDataInterface;
 import Utils.CentralData;
@@ -117,7 +118,7 @@ public class LogInScreenController implements Initializable {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene ((Pane) loader.load()));
         MenuController menu = loader.<MenuController>getController();
-        //modifyOutsourcedController.setUp(partToBeModifiedIndex,temp);
+        ActivityLoger.logUserLogIn(userNameInput, ""+ZonedDateTime.now(ZoneId.of("UTC")));
         stage.show();
     }
     
